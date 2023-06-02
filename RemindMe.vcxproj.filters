@@ -29,14 +29,32 @@
     <ClCompile Include="src\Mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\DlgTasks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DlgClocks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\Mainwindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="src\DlgTasks.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\DlgClocks.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Mainwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\DlgTasks.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\DlgClocks.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

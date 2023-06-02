@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DlgClocksClass</class>
+ <widget class="QDialog" name="DlgClocksClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>470</width>
+    <height>157</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DlgClocks</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>441</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#frame
+{
+ 	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220), stop:1 rgba(20,196,188, 230));
+	border:none;
+	border-radius:10px;
+}
+#lineEditTime
+{
+	font: 25 12pt '微软雅黑 Light';
+	color: rgb(31,31,31);
+	padding-left:20px; 
+	background-color: rgb(255, 255, 255);
+	border:1px solid rgb(20,196,188);
+	border-radius:10px;
+}
+#lineEditContent
+{
+	font: 25 12pt '微软雅黑 Light';
+	color: rgb(31,31,31);
+	padding-left:20px; 
+	background-color: rgb(255, 255, 255);
+	border:1px solid rgb(20,196,188);
+	border-radius:10px;
+}
+QPushButton
+{
+	font: 25 12pt '微软雅黑';
+	color: rgb(255,255,255);
+	background-color: rgb(20,196,188);
+	border:none;
+	border-radius:10px;
+}
+QPushButton
+{
+	font: 25 12pt '微软雅黑';
+	color: rgb(255,255,255);
+	background-color: rgb(20,196,188);
+	border:none;
+	border-radius:10px;
+}
+QPushButton:hover
+{
+	background-color: rgb(22,218,208);
+}
+QPushButton:pressed
+{
+	background-color: rgb(17,171,164);
+}
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="btnConfirm">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>90</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>确定</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnCancel">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>90</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>取消</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame_2">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>316</width>
+      <height>45</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="lineEditTime"/>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEditContent"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

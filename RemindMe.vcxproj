@@ -11,14 +11,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DlgClocks.cpp" />
+    <ClCompile Include="src\DlgTasks.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mainwindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="src\DlgClocks.ui" />
+    <QtUic Include="src\DlgTasks.ui" />
     <QtUic Include="src\Mainwindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Mainwindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\DlgTasks.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\DlgClocks.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF62B719-2038-4FE1-A491-C57350AD263F}</ProjectGuid>
