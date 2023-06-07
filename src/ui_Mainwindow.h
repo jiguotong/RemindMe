@@ -1,24 +1,22 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindowZOnhRv.ui'
+** Form generated from reading UI file 'MainwindowxlCyKG.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWZONHRV_H
-#define MAINWINDOWZONHRV_H
+#ifndef MAINWINDOWXLCYKG_H
+#define MAINWINDOWXLCYKG_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -27,6 +25,8 @@ class Ui_MainwindowClass
 {
 public:
     QWidget *centralWidget;
+    QLabel *label;
+    QWidget *widget;
     QHBoxLayout *horizontalLayout_3;
     QFrame *frame;
     QHBoxLayout *horizontalLayout;
@@ -42,9 +42,10 @@ public:
     QSpacerItem *horizontalSpacer_6;
     QPushButton *btnDelClock;
     QSpacerItem *horizontalSpacer_4;
-    QMenuBar *menuBar;
-    QToolBar *mainToolBar;
-    QStatusBar *statusBar;
+    QLabel *label_2;
+    QLabel *label_3;
+    QLabel *labelDate;
+    QLabel *labelTime;
 
     void setupUi(QMainWindow *MainwindowClass)
     {
@@ -69,15 +70,32 @@ public:
 "{\n"
 "	background-color: rgb(17,171,164);\n"
 "}\n"
+"#centralWidget\n"
+"{\n"
+"	background-color: #E7F7F3;\n"
+"}\n"
 ""));
         centralWidget = new QWidget(MainwindowClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        horizontalLayout_3 = new QHBoxLayout(centralWidget);
+        label = new QLabel(centralWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setGeometry(QRect(250, 80, 100, 20));
+        label->setStyleSheet(QString::fromUtf8("\n"
+"	font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
+"	color: rgb(255,255,255);\n"
+"	background-color: rgb(251,102,102);\n"
+"	border:none;\n"
+""));
+        label->setAlignment(Qt::AlignCenter);
+        widget = new QWidget(centralWidget);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(0, 680, 1200, 60));
+        horizontalLayout_3 = new QHBoxLayout(widget);
         horizontalLayout_3->setSpacing(150);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        horizontalLayout_3->setContentsMargins(0, 600, 0, 0);
-        frame = new QFrame(centralWidget);
+        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
+        frame = new QFrame(widget);
         frame->setObjectName(QString::fromUtf8("frame"));
         frame->setMaximumSize(QSize(300, 60));
         frame->setFrameShape(QFrame::NoFrame);
@@ -111,7 +129,7 @@ public:
 
         horizontalLayout_3->addWidget(frame);
 
-        frame_2 = new QFrame(centralWidget);
+        frame_2 = new QFrame(widget);
         frame_2->setObjectName(QString::fromUtf8("frame_2"));
         frame_2->setMaximumSize(QSize(300, 60));
         frame_2->setFrameShape(QFrame::NoFrame);
@@ -145,17 +163,54 @@ public:
 
         horizontalLayout_3->addWidget(frame_2);
 
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setGeometry(QRect(800, 80, 100, 20));
+        label_2->setStyleSheet(QString::fromUtf8("border-right-style: solid;\n"
+"border-right-width: 1px;\n"
+"border-right-color: white;\n"
+"border-right: 1px solid white;\n"
+"\n"
+"	font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
+"	color: rgb(255,255,255);\n"
+"	background-color: rgb(251,102,102);\n"
+"	border:none;"));
+        label_2->setAlignment(Qt::AlignCenter);
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setGeometry(QRect(900, 80, 100, 20));
+        label_3->setStyleSheet(QString::fromUtf8("\n"
+"	font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
+"	color: rgb(255,255,255);\n"
+"	background-color: rgb(251,102,102);\n"
+"	border:none;"));
+        label_3->setAlignment(Qt::AlignCenter);
+        labelDate = new QLabel(centralWidget);
+        labelDate->setObjectName(QString::fromUtf8("labelDate"));
+        labelDate->setGeometry(QRect(510, 180, 171, 41));
+        labelDate->setStyleSheet(QString::fromUtf8("font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
+"color : #F89F92;\n"
+"font-weight:bold;\n"
+"border:none;\n"
+"background-color: #E7F7F3;"));
+        labelDate->setAlignment(Qt::AlignCenter);
+        labelTime = new QLabel(centralWidget);
+        labelTime->setObjectName(QString::fromUtf8("labelTime"));
+        labelTime->setGeometry(QRect(550, 240, 91, 31));
+        QFont font;
+        font.setFamily(QString::fromUtf8("Times New Roman"));
+        font.setPointSize(12);
+        font.setBold(true);
+        font.setItalic(false);
+        font.setWeight(75);
+        labelTime->setFont(font);
+        labelTime->setStyleSheet(QString::fromUtf8("font: 25 12pt 'Times New Roman';\n"
+"color : #F89F92;\n"
+"font-weight:bold;\n"
+"border:none;\n"
+"background-color: #E7F7F3;"));
+        labelTime->setAlignment(Qt::AlignCenter);
         MainwindowClass->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(MainwindowClass);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1200, 23));
-        MainwindowClass->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainwindowClass);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        MainwindowClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
-        statusBar = new QStatusBar(MainwindowClass);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        MainwindowClass->setStatusBar(statusBar);
 
         retranslateUi(MainwindowClass);
 
@@ -165,10 +220,15 @@ public:
     void retranslateUi(QMainWindow *MainwindowClass)
     {
         MainwindowClass->setWindowTitle(QCoreApplication::translate("MainwindowClass", "Mainwindow", nullptr));
+        label->setText(QCoreApplication::translate("MainwindowClass", "\346\210\221\347\232\204\346\227\245\347\250\213", nullptr));
         btnAdd->setText(QCoreApplication::translate("MainwindowClass", "\345\242\236\345\212\240", nullptr));
         btnDel->setText(QCoreApplication::translate("MainwindowClass", "\345\210\240\351\231\244", nullptr));
         btnAddClock->setText(QCoreApplication::translate("MainwindowClass", "\346\267\273\345\212\240", nullptr));
         btnDelClock->setText(QCoreApplication::translate("MainwindowClass", "\347\274\226\350\276\221", nullptr));
+        label_2->setText(QCoreApplication::translate("MainwindowClass", "\346\227\266  \351\227\264", nullptr));
+        label_3->setText(QCoreApplication::translate("MainwindowClass", "\345\206\205  \345\256\271", nullptr));
+        labelDate->setText(QCoreApplication::translate("MainwindowClass", "2023\345\271\2646\346\234\2107\346\227\245 \346\230\237\346\234\237\344\270\211", nullptr));
+        labelTime->setText(QCoreApplication::translate("MainwindowClass", "00:00", nullptr));
     } // retranslateUi
 
 };
@@ -179,4 +239,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWZONHRV_H
+#endif // MAINWINDOWXLCYKG_H

@@ -7,6 +7,8 @@ DlgTasks::DlgTasks(QWidget *parent)
 	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // 无边框设置
 	setAttribute(Qt::WA_TranslucentBackground);// 背景透明设置
 
+	//ui.lineEdit->setFocus(Qt::ActiveWindowFocusReason); //设置默认焦点
+
 	connect(ui.btnConfirm, &QPushButton::clicked, this, &DlgTasks::OnBtnConfirm);
 	connect(ui.btnCancel, &QPushButton::clicked, this, &DlgTasks::OnBtnCancel);
 }

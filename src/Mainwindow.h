@@ -14,6 +14,7 @@ class Mainwindow : public QMainWindow
 public:
 	Mainwindow(QWidget *parent = nullptr);
 	~Mainwindow();
+	void initWindow();
 	void initCheckBox();
 	void initConnect();
 	void initTable();
@@ -24,6 +25,7 @@ private slots:
 	void on_delBtn_clicked();
 	void onBtnAddClockClicked();
 	void onBtnDelClockClicked();
+	void slotTimerUpdate();
 	void recQStr(QString);
 	void recMsg(QString,QString);
 
@@ -32,6 +34,7 @@ private:
 	QListWidget* p_listwidget;
 	QTableView* p_tableView;
 	QStandardItemModel* p_model;
+	QTimer* p_timeUpdate;
 };
 
 #endif //MAINWINDOW_H

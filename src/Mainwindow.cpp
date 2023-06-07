@@ -5,6 +5,8 @@
 #include <QTextLine>
 #include <QHeaderView>
 #include <QStandardItemModel>
+#include <QTimer>
+#include <QDateTime>
 #include "DlgTasks.h"
 #include "DlgClocks.h"
 
@@ -12,7 +14,9 @@ Mainwindow::Mainwindow(QWidget *parent)
 	: QMainWindow(parent){
 	ui.setupUi(this);
 
-    setFixedSize(1200, 800);
+    
+
+    initWindow();
     initCheckBox();
     initConnect(); 
     initTable();
@@ -20,17 +24,37 @@ Mainwindow::Mainwindow(QWidget *parent)
 
 Mainwindow::~Mainwindow(){}
 
+void Mainwindow::initWindow() {
+
+    // 窗口
+    setFixedSize(1200, 800);
+    setWindowIcon(QIcon(":/res/windowIcon.png"));
+    setWindowTitle(QStringLiteral("今天你全力以赴了吗？"));
+    // 控件
+    ui.btnAdd->setShortcut(tr("Ctrl+Q"));
+    ui.btnDel->setShortcut(tr("Ctrl+W"));
+    ui.btnAddClock->setShortcut(tr("Ctrl+E"));
+    ui.btnDelClock->setShortcut(tr("Ctrl+R"));
+    p_timeUpdate = new QTimer(this);
+    p_timeUpdate->start(1000);
+
+}
+
 void Mainwindow::initConnect() {
     connect(ui.btnAdd, &QPushButton::clicked, this, &Mainwindow::on_addBtn_clicked);
     connect(ui.btnDel, &QPushButton::clicked, this, &Mainwindow::on_delBtn_clicked);
     connect(ui.btnAddClock, &QPushButton::clicked, this, &Mainwindow::onBtnAddClockClicked);
     connect(ui.btnDelClock, &QPushButton::clicked, this, &Mainwindow::onBtnDelClockClicked);
+    connect(p_timeUpdate, &QTimer::timeout, this, &Mainwindow::slotTimerUpdate);
 }
 
 void Mainwindow::initCheckBox(){
     p_listwidget = new QListWidget(this);
     p_listwidget->move(250, 100);
     p_listwidget->resize(100, 500);
+    //p_listwidget->setStyleSheet("background-color:transparent");
+    p_listwidget->setFrameShape(QFrame::NoFrame);
+
     //for (int i = 0; i < 10; i++){
     //    QListWidgetItem* item = new QListWidgetItem(p_listwidget);
     //    QCheckBox* checkbox = new QCheckBox;
@@ -53,13 +77,15 @@ void Mainwindow::initTable() {
     /* 设置表格视图大小 */
     p_tableView->resize(200, 500);
     p_tableView->move(800, 100);
-    p_tableView->setWindowFlags(Qt::FramelessWindowHint);                           //设置无边框
+    p_tableView->setFrameShape(QFrame::NoFrame);
+    //p_tableView->setStyleSheet("background-color:transparent");
     p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                //设置为不可编辑
     p_tableView->verticalHeader()->hide();
+    p_tableView->horizontalHeader()->hide();
     p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    // 自适应所有列，让它布满空间
-    p_tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
+    /*p_tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
 qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
-color: white;}");
+color: white;}");*/
     /*p_tableView->verticalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
 qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
 color: white;}");*/
@@ -117,12 +143,30 @@ void Mainwindow::on_addBtn_clicked()
     dlgTask = NULL; 
 }
 
+void Mainwindow::on_delBtn_clicked()
+{
+    //获取当前选中行
+    int row = p_listwidget->currentRow();
+    if (row < 0) {
+        return;
+    }
+    for (int i = 0; i < p_listwidget->count(); i++) {
+        QListWidgetItem* item = p_listwidget->item(i);
+        //将QWidget 转化为QCheckBox  获取第i个item 的控件
+        QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
+        if (checkbox->isChecked()) {
+            p_listwidget->takeItem(row);
+        }
+    }
+}
+
 void Mainwindow::recQStr(QString str) {   
     //获取当前的行数
     int row = p_listwidget->count();
     QListWidgetItem* item = new QListWidgetItem(p_listwidget);
     //在当前行添加item  checkbox
     QCheckBox* checkbox = new QCheckBox;
+    item->setBackground(QBrush(QColor("#A0F4E7")));
     checkbox->setText(str);
     p_listwidget->addItem(item);
     p_listwidget->setItemWidget(item, checkbox);
@@ -134,29 +178,14 @@ void Mainwindow::recMsg(QString time, QString content) {
     int row = p_tableView->model()->rowCount();
     QStandardItem* item1 = new QStandardItem(time);
     QStandardItem* item2 = new QStandardItem(content);
+    item1->setTextAlignment(Qt::AlignCenter);
+    item2->setTextAlignment(Qt::AlignCenter);
 
-    item1->setBackground(QBrush(QColor("#58b5b0")));
-    item2->setBackground(QBrush(QColor("#58b5b0")));
+    item1->setBackground(QBrush(QColor("#A0F4E7")));
+    item2->setBackground(QBrush(QColor("#A0F4E7")));
     p_model->setItem(row, 0, item1);
     p_model->setItem(row, 1, item2);
-}
 
-
-void Mainwindow::on_delBtn_clicked()
-{
-    //获取当前选中行
-    int row = p_listwidget->currentRow();
-    if (row < 0){
-        return;
-    }
-    for (int i = 0; i < p_listwidget->count(); i++){
-        QListWidgetItem* item = p_listwidget->item(i);
-        //将QWidget 转化为QCheckBox  获取第i个item 的控件
-        QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
-        if (checkbox->isChecked()){
-            p_listwidget->takeItem(row);
-        }
-    }
 }
 
 void Mainwindow::onBtnAddClockClicked() {
@@ -173,4 +202,12 @@ void Mainwindow::onBtnAddClockClicked() {
 
 void Mainwindow::onBtnDelClockClicked() {
 
+}
+
+void Mainwindow::slotTimerUpdate() {
+    QDateTime time = QDateTime::currentDateTime();//获取当前日期和时间
+    QString strdDate = time.toString("yyyy-MM-dd dddd");//格式为年-月-日 小时-分钟-秒 星期
+    QString strdTime = time.toString("hh:mm:ss");//格式为年-月-日 小时-分钟-秒 星期
+    ui.labelDate->setText(strdDate);
+    ui.labelTime->setText(strdTime);
 }

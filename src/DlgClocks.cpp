@@ -7,7 +7,7 @@ DlgClocks::DlgClocks(QWidget *parent)
 	ui.setupUi(this);
 	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // 无边框设置
 	setAttribute(Qt::WA_TranslucentBackground);// 背景透明设置
-
+	//ui.lineEditTime->setFocus(); //设置默认焦点
 	connect(ui.btnConfirm, &QPushButton::clicked, this, &DlgClocks::OnBtnConfirm);
 	connect(ui.btnCancel, &QPushButton::clicked, this, &DlgClocks::OnBtnCancel);
 }
