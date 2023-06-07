@@ -19,11 +19,11 @@ void DlgClocks::OnBtnConfirm() {
 	QString timeStr = ui.lineEditTime->text();
 	QString contentStr = ui.lineEditContent->text();
 	if (timeStr.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("时间不允许为空"));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    时间不允许为空    "));
 		return;
 	}
 	if (contentStr.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("内容不允许为空"));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    内容不允许为空    "));
 		return;
 	}
 	emit sendMsg(timeStr, contentStr);

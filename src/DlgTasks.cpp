@@ -19,7 +19,7 @@ DlgTasks::~DlgTasks()
 void DlgTasks::OnBtnConfirm() {
 	QString text = ui.lineEdit->text();
 	if (text.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("内容不允许为空"));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    内容不允许为空    "));
 		return;
 	}
 	emit SendText(text);

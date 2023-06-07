@@ -78,11 +78,14 @@ void Mainwindow::initTable() {
     p_tableView->resize(200, 500);
     p_tableView->move(800, 100);
     p_tableView->setFrameShape(QFrame::NoFrame);
-    //p_tableView->setStyleSheet("background-color:transparent");
+    //p_tableView->setStyleSheet("background-color:transparent");                                       
     p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                //设置为不可编辑
     p_tableView->verticalHeader()->hide();
     p_tableView->horizontalHeader()->hide();
     p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    // 自适应所有列，让它布满空间
+    
+
+
     /*p_tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
 qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
 color: white;}");*/
@@ -108,6 +111,9 @@ color: white;}");*/
 
     /* 设置表格视图数据 */
     p_tableView->setModel(p_model);
+
+    p_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);//对第0列单独设置固定宽度
+    p_tableView->setColumnWidth(0, 60);       //设置第1列宽100
 
     /* 显示 */
     p_tableView->show();
@@ -164,10 +170,12 @@ void Mainwindow::recQStr(QString str) {
     //获取当前的行数
     int row = p_listwidget->count();
     QListWidgetItem* item = new QListWidgetItem(p_listwidget);
+    item->setSizeHint(QSize(0, 30));
     //在当前行添加item  checkbox
     QCheckBox* checkbox = new QCheckBox;
     item->setBackground(QBrush(QColor("#A0F4E7")));
     checkbox->setText(str);
+    checkbox->setStyleSheet("QCheckBox{color:white;font-weight:bold;height:30px}");
     p_listwidget->addItem(item);
     p_listwidget->setItemWidget(item, checkbox);
     connect(checkbox, &QCheckBox::stateChanged, this, &Mainwindow::checkboxStateChanged);
@@ -180,7 +188,10 @@ void Mainwindow::recMsg(QString time, QString content) {
     QStandardItem* item2 = new QStandardItem(content);
     item1->setTextAlignment(Qt::AlignCenter);
     item2->setTextAlignment(Qt::AlignCenter);
-
+    item1->setFont(QFont(QStringLiteral("思源黑体 CN BOLD"), 10));
+    item2->setFont(QFont(QStringLiteral("思源黑体 CN BOLD"), 10));
+    item1->setForeground(QBrush(QColor("#FFFFFF")));
+    item2->setForeground(QBrush(QColor("#FFFFFF")));
     item1->setBackground(QBrush(QColor("#A0F4E7")));
     item2->setBackground(QBrush(QColor("#A0F4E7")));
     p_model->setItem(row, 0, item1);
@@ -198,10 +209,13 @@ void Mainwindow::onBtnAddClockClicked() {
     //销毁视图
     delete dlgClock;
     dlgClock = NULL;
+
+    int id = startTimer(10000);
 }
 
 void Mainwindow::onBtnDelClockClicked() {
-
+    int timeId = startTimer(5000);//测试时间为5秒
+    timerIds.push_back(timeId);
 }
 
 void Mainwindow::slotTimerUpdate() {
@@ -210,4 +224,13 @@ void Mainwindow::slotTimerUpdate() {
     QString strdTime = time.toString("hh:mm:ss");//格式为年-月-日 小时-分钟-秒 星期
     ui.labelDate->setText(strdDate);
     ui.labelTime->setText(strdTime);
+}
+
+void Mainwindow::timerEvent(QTimerEvent* event) {
+    int tmp = event->timerId();
+    qDebug() << tmp << endl;
+    // 弹窗
+    QMessageBox::warning(this, "Warning", QStringLiteral("时间到了哦，xxxxxx"));
+    // 音乐
+    killTimer(tmp);
 }

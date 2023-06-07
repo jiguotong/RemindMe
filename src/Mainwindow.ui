@@ -50,7 +50,7 @@ QPushButton:pressed
     </property>
     <property name="styleSheet">
      <string notr="true">
-	font: 25 12pt '微软雅黑';
+	font: 25 12pt '思源黑体 CN BOLD';
 	color: rgb(255,255,255);
 	background-color: rgb(251,102,102);
 	border:none;
@@ -119,7 +119,7 @@ QPushButton:pressed
         <item>
          <widget class="QPushButton" name="btnAdd">
           <property name="text">
-           <string>增加</string>
+           <string>添加</string>
           </property>
          </widget>
         </item>
@@ -237,7 +237,7 @@ QPushButton:pressed
      <rect>
       <x>800</x>
       <y>80</y>
-      <width>100</width>
+      <width>60</width>
       <height>20</height>
      </rect>
     </property>
@@ -247,10 +247,9 @@ border-right-width: 1px;
 border-right-color: white;
 border-right: 1px solid white;
 
-	font: 25 12pt '微软雅黑';
-	color: rgb(255,255,255);
-	background-color: rgb(251,102,102);
-	border:none;</string>
+font: 25 12pt '思源黑体 CN BOLD';
+color: rgb(255,255,255);
+background-color: rgb(251,102,102);</string>
     </property>
     <property name="text">
      <string>时  间</string>
@@ -262,21 +261,20 @@ border-right: 1px solid white;
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>900</x>
+      <x>860</x>
       <y>80</y>
-      <width>100</width>
+      <width>140</width>
       <height>20</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">
-	font: 25 12pt '微软雅黑';
-	color: rgb(255,255,255);
-	background-color: rgb(251,102,102);
-	border:none;</string>
+     <string notr="true">font: 25 12pt '思源黑体 CN BOLD';
+color: rgb(255,255,255);
+background-color: rgb(251,102,102);
+border:none;</string>
     </property>
     <property name="text">
-     <string>内  容</string>
+     <string>内      容</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -285,8 +283,8 @@ border-right: 1px solid white;
    <widget class="QLabel" name="labelDate">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>180</y>
+      <x>512</x>
+      <y>110</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -308,30 +306,30 @@ background-color: #E7F7F3;</string>
    <widget class="QLabel" name="labelTime">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>240</y>
-      <width>91</width>
-      <height>31</height>
+      <x>510</x>
+      <y>170</y>
+      <width>171</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Times New Roman</family>
-      <pointsize>12</pointsize>
+      <family>Pixel LCD7</family>
+      <pointsize>20</pointsize>
       <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 25 12pt 'Times New Roman';
+     <string notr="true">font: 25 20pt 'Pixel LCD7';
 color : #F89F92;
 font-weight:bold;
 border:none;
 background-color: #E7F7F3;</string>
     </property>
     <property name="text">
-     <string>00:00</string>
+     <string>00:00:00</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

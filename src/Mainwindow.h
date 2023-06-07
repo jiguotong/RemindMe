@@ -30,11 +30,14 @@ private slots:
 	void recMsg(QString,QString);
 
 private:
+	void timerEvent(QTimerEvent* event);
+private:
 	Ui::MainwindowClass ui;
 	QListWidget* p_listwidget;
 	QTableView* p_tableView;
 	QStandardItemModel* p_model;
 	QTimer* p_timeUpdate;
+	QVector<int> timerIds;
 };
 
 #endif //MAINWINDOW_H
