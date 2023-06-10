@@ -42,9 +42,9 @@ QPushButton:pressed
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>200</x>
       <y>80</y>
-      <width>100</width>
+      <width>200</width>
       <height>20</height>
      </rect>
     </property>
@@ -57,7 +57,7 @@ QPushButton:pressed
 </string>
     </property>
     <property name="text">
-     <string>我的日程</string>
+     <string>我  的  日  程</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -335,9 +335,30 @@ background-color: #E7F7F3;</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="labelImage">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>360</y>
+      <width>281</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="Resource.qrc">:/res/panda.gif</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="Resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

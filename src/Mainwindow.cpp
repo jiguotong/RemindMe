@@ -7,6 +7,7 @@
 #include <QStandardItemModel>
 #include <QTimer>
 #include <QDateTime>
+#include <QMovie>
 #include "DlgTasks.h"
 #include "DlgClocks.h"
 
@@ -35,6 +36,13 @@ void Mainwindow::initWindow() {
     ui.btnDel->setShortcut(tr("Ctrl+W"));
     ui.btnAddClock->setShortcut(tr("Ctrl+E"));
     ui.btnDelClock->setShortcut(tr("Ctrl+R"));
+
+    // 
+    QMovie *movie = new QMovie(":/res/panda.gif");
+    ui.labelImage->setMovie(movie);
+    movie->start();
+    ui.labelImage->show();
+    // 用于实时刷新时间的定时器
     p_timeUpdate = new QTimer(this);
     p_timeUpdate->start(1000);
 
@@ -50,8 +58,8 @@ void Mainwindow::initConnect() {
 
 void Mainwindow::initCheckBox(){
     p_listwidget = new QListWidget(this);
-    p_listwidget->move(250, 100);
-    p_listwidget->resize(100, 500);
+    p_listwidget->move(200, 100);
+    p_listwidget->resize(200, 500);
     //p_listwidget->setStyleSheet("background-color:transparent");
     p_listwidget->setFrameShape(QFrame::NoFrame);
 
@@ -209,8 +217,6 @@ void Mainwindow::onBtnAddClockClicked() {
     //销毁视图
     delete dlgClock;
     dlgClock = NULL;
-
-    int id = startTimer(10000);
 }
 
 void Mainwindow::onBtnDelClockClicked() {
@@ -228,9 +234,24 @@ void Mainwindow::slotTimerUpdate() {
 
 void Mainwindow::timerEvent(QTimerEvent* event) {
     int tmp = event->timerId();
-    qDebug() << tmp << endl;
+    qDebug() << tmp;
     // 弹窗
     QMessageBox::warning(this, "Warning", QStringLiteral("时间到了哦，xxxxxx"));
     // 音乐
+
+
+    // 取消掉此计时器
     killTimer(tmp);
+}
+
+void Mainwindow::closeEvent(QCloseEvent* event) {
+    //窗口关闭时询问是否退出
+    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("确认"), QStringLiteral("退出程序将会清空所有内容，确定要退出本程序吗？"),
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+        QMessageBox::No);
+
+    if (result == QMessageBox::Yes)
+        event->accept();
+    else
+        event->ignore();
 }

@@ -31,6 +31,8 @@ private slots:
 
 private:
 	void timerEvent(QTimerEvent* event);
+	void closeEvent(QCloseEvent* event);
+
 private:
 	Ui::MainwindowClass ui;
 	QListWidget* p_listwidget;

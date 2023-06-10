@@ -16,8 +16,9 @@ public:
 public:
 	void OnBtnConfirm();
 	void OnBtnCancel();
+	
+private:
 	void closeEvent(QCloseEvent* e);
-
 private:
 	Ui::DlgTasksClass ui;
 };
