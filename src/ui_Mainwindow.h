@@ -1,15 +1,16 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindowawXLfF.ui'
+** Form generated from reading UI file 'MainwindownUlxRS.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWAWXLFF_H
-#define MAINWINDOWAWXLFF_H
+#ifndef MAINWINDOWNULXRS_H
+#define MAINWINDOWNULXRS_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
@@ -53,6 +54,9 @@ public:
         if (MainwindowClass->objectName().isEmpty())
             MainwindowClass->setObjectName(QString::fromUtf8("MainwindowClass"));
         MainwindowClass->resize(1200, 800);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/res/windowIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        MainwindowClass->setWindowIcon(icon);
         MainwindowClass->setStyleSheet(QString::fromUtf8("QPushButton\n"
 "{\n"
 "	font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
@@ -244,4 +248,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWAWXLFF_H
+#endif // MAINWINDOWNULXRS_H

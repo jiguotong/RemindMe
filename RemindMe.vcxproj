@@ -36,6 +36,12 @@
   <ItemGroup>
     <QtRcc Include="src\Resource.qrc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\res\softwareIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\RemindMe.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF62B719-2038-4FE1-A491-C57350AD263F}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>

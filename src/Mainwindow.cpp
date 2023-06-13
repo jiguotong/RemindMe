@@ -42,6 +42,12 @@ void Mainwindow::initWindow() {
     ui.labelImage->setMovie(movie);
     movie->start();
     ui.labelImage->show();
+
+    // 闹钟链表初始化，增加头节点
+    ClockNode* headNode= new ClockNode;
+    p_head = headNode;
+    p_clockList = headNode;
+
     // 用于实时刷新时间的定时器
     p_timeUpdate = new QTimer(this);
     p_timeUpdate->start(1000);
@@ -205,13 +211,35 @@ void Mainwindow::recMsg(QString time, QString content) {
     p_model->setItem(row, 0, item1);
     p_model->setItem(row, 1, item2);
 
+    // 获取此刻时间
+    QDateTime currentTime_ = QDateTime::currentDateTime();//获取当前日期和时间
+    QString strDate = currentTime_.toString("yyyy-MM-dd");
+    //QString strdTime = currentTime.toString("hh:mm:ss");//格式为年-月-日 小时-分钟-秒 星期
+    //QString strSecond = currentTime_.toString("ss");
+    qDebug() << QStringLiteral("当前时间为：") << currentTime_;
+    
+    // 拼接闹钟时间
+    QString strClockTime = QString("%1 %2:%3")
+        .arg(strDate).arg(time).arg("00");
+    QDateTime clockTime_ = QDateTime::fromString(strClockTime, "yyyy-MM-dd hh:mm:ss");
+    qDebug() << QStringLiteral("闹钟时间为：") << clockTime_;
+
+    
+    // 计算时间差
+    int elapsed = currentTime_.msecsTo(clockTime_);     // 单位是毫秒
+    qDebug() << QStringLiteral("还剩时间：") << elapsed << QStringLiteral("毫秒");
+
+    // 开始计时
+    int timeId = startTimer(elapsed);              // startTimer的单位是毫秒
+    ClockNode* clockNode = new ClockNode{ timeId, time, content,NULL };
+    p_clockList->next = clockNode;
+    p_clockList = clockNode;        // 更新链表指针到最后一个节点
 }
 
 void Mainwindow::onBtnAddClockClicked() {
     DlgClocks* dlgClock = new DlgClocks(this);
     connect(dlgClock, &DlgClocks::sendMsg, this, &Mainwindow::recMsg);
-    //dlgClock->show();
-
+    // 进行阻塞
     dlgClock->exec();
 
     //销毁视图
@@ -220,8 +248,7 @@ void Mainwindow::onBtnAddClockClicked() {
 }
 
 void Mainwindow::onBtnDelClockClicked() {
-    int timeId = startTimer(5000);//测试时间为5秒
-    timerIds.push_back(timeId);
+    
 }
 
 void Mainwindow::slotTimerUpdate() {
@@ -233,15 +260,44 @@ void Mainwindow::slotTimerUpdate() {
 }
 
 void Mainwindow::timerEvent(QTimerEvent* event) {
-    int tmp = event->timerId();
-    qDebug() << tmp;
+    int timerid = event->timerId();
+    QString time;
+    QString content;
+    qDebug() << timerid;
+
+    // 从闹钟链表中移除该项并返回时钟与内容
+    removeClock(timerid, time, content);
+
+    // 表格中删除相应内容
+    
     // 弹窗
-    QMessageBox::warning(this, "Warning", QStringLiteral("时间到了哦，xxxxxx"));
+    QMessageBox::warning(this, "Warning", content);
+
     // 音乐
 
 
     // 取消掉此计时器
-    killTimer(tmp);
+    killTimer(timerid); 
+}
+
+void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
+    ClockNode* p = p_head->next;          // 遍历指针     
+    ClockNode* q = p_head;               // 指向上一节点的指针
+    while (p != NULL) {
+        if (p->timerId = timerid) {
+            time = p->time;
+            content = p->content;
+            q->next = p->next;
+            delete p;
+            p = NULL;
+
+            if (q->next == NULL)         // 此时说明删除的是最后一个节点，需要将p_clockList重新指向头节点
+                p_clockList = p_head;
+            return;
+        }
+        q = p;
+        p = p->next;
+    }
 }
 
 void Mainwindow::closeEvent(QCloseEvent* event) {

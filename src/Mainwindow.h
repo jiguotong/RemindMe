@@ -7,6 +7,12 @@
 #include <QStandardItemModel>
 #include "ui_Mainwindow.h"
 
+typedef struct ClockNode {
+	int timerId;
+	QString time;
+	QString content;
+	ClockNode* next;
+}*ClockList;
 class Mainwindow : public QMainWindow
 {
 	Q_OBJECT
@@ -19,6 +25,8 @@ public:
 	void initConnect();
 	void initTable();
 
+public:
+	void removeClock(int, QString&, QString&);
 private slots:
 	void checkboxStateChanged(int);
 	void on_addBtn_clicked();
@@ -39,7 +47,9 @@ private:
 	QTableView* p_tableView;
 	QStandardItemModel* p_model;
 	QTimer* p_timeUpdate;
-	QVector<int> timerIds;
+	QVector<ClockNode> m_clockVec;
+	ClockList p_clockList;				// 存放闹钟节点的链表
+	ClockNode* p_head;					// 头指针
 };
 
 #endif //MAINWINDOW_H

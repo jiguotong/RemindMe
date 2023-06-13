@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Mainwindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resource.qrc">
+    <normaloff>:/res/windowIcon.png</normaloff>:/res/windowIcon.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">QPushButton
 {

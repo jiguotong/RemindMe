@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QSharedMemory>
 #include <QMessageBox>
-
+#include <QDateTime>
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -14,6 +14,17 @@ int main(int argc, char *argv[])
     // 检测内存泄漏
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+    /*时间有效期为3天，三天后不可用！*/
+    QDateTime baseTime = QDateTime::fromString("2023-06-15 00:00:00", "yyyy-MM-dd hh:mm:ss");       // 规定一个初始化基准时间
+    QDateTime currentTime = QDateTime::currentDateTime();                                           //获取系统当前的时间
+    int startTime = baseTime.toTime_t();        //将当前时间转为时间戳
+    int endTime = currentTime.toTime_t();       //将当前时间转为时间戳
+    if (endTime - startTime > 259200) {
+        QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
+        return -1;
+    }
+
+    // 进入程序
     QApplication a(argc, argv);
     qDebug() << "QApplication start!";
     // 设置一个互斥量
