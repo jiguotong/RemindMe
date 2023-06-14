@@ -29,8 +29,8 @@ public:
 	void removeClock(int, QString&, QString&);
 private slots:
 	void checkboxStateChanged(int);
-	void on_addBtn_clicked();
-	void on_delBtn_clicked();
+	void onBtnAddTaskClicked();
+	void onBtnDelTaskClicked();
 	void onBtnAddClockClicked();
 	void onBtnDelClockClicked();
 	void slotTimerUpdate();

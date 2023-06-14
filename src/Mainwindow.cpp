@@ -55,8 +55,8 @@ void Mainwindow::initWindow() {
 }
 
 void Mainwindow::initConnect() {
-    connect(ui.btnAdd, &QPushButton::clicked, this, &Mainwindow::on_addBtn_clicked);
-    connect(ui.btnDel, &QPushButton::clicked, this, &Mainwindow::on_delBtn_clicked);
+    connect(ui.btnAdd, &QPushButton::clicked, this, &Mainwindow::onBtnAddTaskClicked);
+    connect(ui.btnDel, &QPushButton::clicked, this, &Mainwindow::onBtnDelTaskClicked);
     connect(ui.btnAddClock, &QPushButton::clicked, this, &Mainwindow::onBtnAddClockClicked);
     connect(ui.btnDelClock, &QPushButton::clicked, this, &Mainwindow::onBtnDelClockClicked);
     connect(p_timeUpdate, &QTimer::timeout, this, &Mainwindow::slotTimerUpdate);
@@ -68,20 +68,6 @@ void Mainwindow::initCheckBox(){
     p_listwidget->resize(200, 500);
     //p_listwidget->setStyleSheet("background-color:transparent");
     p_listwidget->setFrameShape(QFrame::NoFrame);
-
-    //for (int i = 0; i < 10; i++){
-    //    QListWidgetItem* item = new QListWidgetItem(p_listwidget);
-    //    QCheckBox* checkbox = new QCheckBox;
-    //    checkbox->setText(QString("%1").arg(i));
-    //    //设置item的高度
-    //    item->setSizeHint(QSize(0, 20));
-    //    p_listwidget->addItem(item);
-
-    //    // 将item与checkbox关联
-    //    p_listwidget->setItemWidget(item, checkbox);
-    //    //遍历每个checkbox
-    //    connect(checkbox, &QCheckBox::stateChanged, this, &Mainwindow::checkboxStateChanged);
-    //}
 }
 
 void Mainwindow::initTable() {
@@ -93,7 +79,9 @@ void Mainwindow::initTable() {
     p_tableView->move(800, 100);
     p_tableView->setFrameShape(QFrame::NoFrame);
     //p_tableView->setStyleSheet("background-color:transparent");                                       
-    p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                //设置为不可编辑
+    p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                // 设置为不可编辑
+    p_tableView->setSelectionMode(QAbstractItemView::NoSelection);                  // 设置为不可选中
+
     p_tableView->verticalHeader()->hide();
     p_tableView->horizontalHeader()->hide();
     p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    // 自适应所有列，让它布满空间
@@ -106,8 +94,6 @@ color: white;}");*/
     /*p_tableView->verticalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
 qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
 color: white;}");*/
-
-
 
     // 创建数据模型 */
     p_model = new QStandardItemModel();
@@ -150,7 +136,7 @@ void Mainwindow::checkboxStateChanged(int)
     qDebug() << itemList;
 }
 
-void Mainwindow::on_addBtn_clicked()
+void Mainwindow::onBtnAddTaskClicked()
 {
     DlgTasks* dlgTask = new DlgTasks(this);
     connect(dlgTask, &DlgTasks::SendText, this, &Mainwindow::recQStr);
@@ -163,20 +149,19 @@ void Mainwindow::on_addBtn_clicked()
     dlgTask = NULL; 
 }
 
-void Mainwindow::on_delBtn_clicked()
+void Mainwindow::onBtnDelTaskClicked()
 {
     //获取当前选中行
     int row = p_listwidget->currentRow();
     if (row < 0) {
         return;
     }
-    for (int i = 0; i < p_listwidget->count(); i++) {
-        QListWidgetItem* item = p_listwidget->item(i);
-        //将QWidget 转化为QCheckBox  获取第i个item 的控件
-        QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
-        if (checkbox->isChecked()) {
-            p_listwidget->takeItem(row);
-        }
+    QListWidgetItem* item = p_listwidget->item(row);
+    //将QWidget 转化为QCheckBox  获取第roew个item 的控件
+    QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
+    if (checkbox->isChecked()) {
+        p_listwidget->takeItem(row);
+        delete checkbox;
     }
 }
 
@@ -190,6 +175,7 @@ void Mainwindow::recQStr(QString str) {
     item->setBackground(QBrush(QColor("#A0F4E7")));
     checkbox->setText(str);
     checkbox->setStyleSheet("QCheckBox{color:white;font-weight:bold;height:30px}");
+    //checkbox->setStyleSheet("QCheckBox{color:#F89F92;font-weight:bold;height:30px}");
     p_listwidget->addItem(item);
     p_listwidget->setItemWidget(item, checkbox);
     connect(checkbox, &QCheckBox::stateChanged, this, &Mainwindow::checkboxStateChanged);
@@ -284,7 +270,7 @@ void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
     ClockNode* p = p_head->next;          // 遍历指针     
     ClockNode* q = p_head;               // 指向上一节点的指针
     while (p != NULL) {
-        if (p->timerId = timerid) {
+        if (p->timerId == timerid) {
             time = p->time;
             content = p->content;
             q->next = p->next;
