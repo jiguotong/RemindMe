@@ -5,6 +5,7 @@
 #include <QListWidget>
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QSoundEffect>
 #include "ui_Mainwindow.h"
 
 typedef struct ClockNode {
@@ -50,6 +51,8 @@ private:
 	QVector<ClockNode> m_clockVec;
 	ClockList p_clockList;				// 存放闹钟节点的链表
 	ClockNode* p_head;					// 头指针
+
+	QSoundEffect* m_soundEffect;		// 音效播放
 };
 
 #endif //MAINWINDOW_H

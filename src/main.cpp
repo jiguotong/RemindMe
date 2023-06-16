@@ -64,5 +64,3 @@ int main(int argc, char *argv[])
 
 // 表格QTableView
 //https://blog.csdn.net/u010031316/article/details/116886567
-
-//对话框需要改成单例模式避免一直申请内存

@@ -37,11 +37,17 @@ void Mainwindow::initWindow() {
     ui.btnAddClock->setShortcut(tr("Ctrl+E"));
     ui.btnDelClock->setShortcut(tr("Ctrl+R"));
 
-    // 
+    // 初始化动态图
     QMovie *movie = new QMovie(":/res/panda.gif");
     ui.labelImage->setMovie(movie);
     movie->start();
     ui.labelImage->show();
+
+    // 初始化背景音乐
+    m_soundEffect = new QSoundEffect(this);
+    m_soundEffect->setSource(QUrl::fromLocalFile("C:\\Users\\Administrator\\Desktop\\RemindMe\\src\\res\\Alarm01.wav"));
+    m_soundEffect->setLoopCount(QSoundEffect::Infinite);
+    m_soundEffect->setVolume(0.25f);
 
     // 闹钟链表初始化，增加头节点
     ClockNode* headNode= new ClockNode;
@@ -234,7 +240,8 @@ void Mainwindow::onBtnAddClockClicked() {
 }
 
 void Mainwindow::onBtnDelClockClicked() {
-    
+    // 暂时写在这里
+    m_soundEffect->stop();
 }
 
 void Mainwindow::slotTimerUpdate() {
@@ -256,11 +263,14 @@ void Mainwindow::timerEvent(QTimerEvent* event) {
 
     // 表格中删除相应内容
     
-    // 弹窗
-    QMessageBox::warning(this, "Warning", content);
-
     // 音乐
+    m_soundEffect->play();
 
+    // 弹窗
+    int res = QMessageBox::warning(this, "Warning", content);
+    if(res)
+        m_soundEffect->stop();
+    
 
     // 取消掉此计时器
     killTimer(timerid); 
@@ -289,8 +299,8 @@ void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
 void Mainwindow::closeEvent(QCloseEvent* event) {
     //窗口关闭时询问是否退出
     QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("确认"), QStringLiteral("退出程序将会清空所有内容，确定要退出本程序吗？"),
-        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
-        QMessageBox::No);
+        QMessageBox::Yes | QMessageBox::Cancel,
+        QMessageBox::Cancel);
 
     if (result == QMessageBox::Yes)
         event->accept();
