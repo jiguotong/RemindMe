@@ -14,8 +14,12 @@ int main(int argc, char *argv[])
     // 检测内存泄漏
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+    // 进入程序
+    QApplication a(argc, argv);
+    qDebug() << "QApplication start!";
+
     /*时间有效期为3天，三天后不可用！*/
-    QDateTime baseTime = QDateTime::fromString("2023-06-15 00:00:00", "yyyy-MM-dd hh:mm:ss");       // 规定一个初始化基准时间
+    QDateTime baseTime = QDateTime::fromString("2023-06-29 00:00:00", "yyyy-MM-dd hh:mm:ss");       // 规定一个初始化基准时间
     QDateTime currentTime = QDateTime::currentDateTime();                                           //获取系统当前的时间
     int startTime = baseTime.toTime_t();        //将当前时间转为时间戳
     int endTime = currentTime.toTime_t();       //将当前时间转为时间戳
@@ -24,9 +28,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // 进入程序
-    QApplication a(argc, argv);
-    qDebug() << "QApplication start!";
+
     // 设置一个互斥量
     QMutex mutex;
     mutex.lock();// 开启临界区
@@ -34,7 +36,7 @@ int main(int argc, char *argv[])
     static QSharedMemory* shareMem = new QSharedMemory("SingleApp");
     if (!shareMem->create(1)) {
         mutex.unlock();// 关闭临界区
-        QMessageBox::information(0, "Tip", "DentalScan has been running!");
+        QMessageBox::information(0, "Tip", "RemindMe has been running!");
         return -1;  // 创建失败，说明已有一个程序在运行，退出当前程序
     }
     mutex.unlock();// 关闭临界区
@@ -43,7 +45,8 @@ int main(int argc, char *argv[])
     w.show(); 
 
     return a.exec(); 
-}
+}   
+
 
 // 参考资料
 //https://blog.csdn.net/lion_cxq/article/details/115101356

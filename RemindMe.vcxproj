@@ -15,11 +15,13 @@
     <ClCompile Include="src\DlgTasks.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mainwindow.cpp" />
+    <ClCompile Include="src\MyDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\DlgClocks.ui" />
     <QtUic Include="src\DlgTasks.ui" />
     <QtUic Include="src\Mainwindow.ui" />
+    <QtUic Include="src\MyDialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Mainwindow.h" />
@@ -32,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <QtMoc Include="src\MyDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="src\Resource.qrc" />

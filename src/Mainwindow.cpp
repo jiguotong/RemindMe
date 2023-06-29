@@ -10,6 +10,7 @@
 #include <QMovie>
 #include "DlgTasks.h"
 #include "DlgClocks.h"
+#include "MyDialog.h"
 
 Mainwindow::Mainwindow(QWidget *parent)
 	: QMainWindow(parent){
@@ -54,10 +55,15 @@ void Mainwindow::initWindow() {
     p_head = headNode;
     p_clockList = headNode;
 
+    // 系统托盘
+    m_tray = new QSystemTrayIcon(this);
+    m_tray->setIcon(QIcon(":/res/windowIcon.png"));
+    m_tray->setToolTip(QStringLiteral("RemindMe"));
+    m_tray->show();
+
     // 用于实时刷新时间的定时器
     p_timeUpdate = new QTimer(this);
     p_timeUpdate->start(1000);
-
 }
 
 void Mainwindow::initConnect() {
@@ -66,6 +72,7 @@ void Mainwindow::initConnect() {
     connect(ui.btnAddClock, &QPushButton::clicked, this, &Mainwindow::onBtnAddClockClicked);
     connect(ui.btnDelClock, &QPushButton::clicked, this, &Mainwindow::onBtnDelClockClicked);
     connect(p_timeUpdate, &QTimer::timeout, this, &Mainwindow::slotTimerUpdate);
+    connect(m_tray, &QSystemTrayIcon::activated, this, &Mainwindow::onActivatedSysTrayIcon);
 }
 
 void Mainwindow::initCheckBox(){
@@ -240,6 +247,11 @@ void Mainwindow::onBtnAddClockClicked() {
 }
 
 void Mainwindow::onBtnDelClockClicked() {
+    MyDialog* remindPop = new MyDialog(this);
+    remindPop->SetLabelContent("content");
+    remindPop->SetLabelIcon(":/res/windowIcon.png");
+    remindPop->setAttribute(Qt::WA_DeleteOnClose);		// 设置退出自动销毁
+    remindPop->show();
     // 暂时写在这里
     m_soundEffect->stop();
 }
@@ -267,6 +279,10 @@ void Mainwindow::timerEvent(QTimerEvent* event) {
     m_soundEffect->play();
 
     // 弹窗
+    this->showNormal();
+    MyDialog remindPop;
+    remindPop.SetLabelContent(content);
+    remindPop.show();
     int res = QMessageBox::warning(this, "Warning", content);
     if(res)
         m_soundEffect->stop();
@@ -300,10 +316,43 @@ void Mainwindow::closeEvent(QCloseEvent* event) {
     //窗口关闭时询问是否退出
     QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("确认"), QStringLiteral("退出程序将会清空所有内容，确定要退出本程序吗？"),
         QMessageBox::Yes | QMessageBox::Cancel,
-        QMessageBox::Cancel);
+        QMessageBox::Yes);
 
-    if (result == QMessageBox::Yes)
+    if (result == QMessageBox::Yes){
+        isClosed = true;
         event->accept();
+    }
+        
     else
         event->ignore();
+}
+
+void Mainwindow::hideEvent(QHideEvent* event)
+{
+    if (isClosed){              // 阻止关闭窗口时仍提示隐藏到托盘
+        event->accept();
+        return;
+    }
+    if (m_tray->isVisible())
+    {
+        qDebug() << QStringLiteral("隐藏到托盘");
+        m_tray->showMessage("RemindMe", QStringLiteral("隐藏到托盘图标了")); //提示用户隐藏到了托盘
+        event->ignore(); //忽略事件
+    }
+    else
+        event->accept();
+}
+
+void Mainwindow::onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+        this->showNormal();
+        break;
+    case QSystemTrayIcon::DoubleClick:
+        this->showNormal();
+        break;
+    default:
+        break;
+    }
 }

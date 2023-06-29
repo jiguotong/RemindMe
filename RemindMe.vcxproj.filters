@@ -35,6 +35,9 @@
     <ClCompile Include="src\DlgClocks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\MyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\Mainwindow.ui">
@@ -46,6 +49,9 @@
     <QtUic Include="src\DlgClocks.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="src\MyDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Mainwindow.h">
@@ -55,6 +61,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\DlgClocks.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\MyDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
