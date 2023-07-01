@@ -19,6 +19,7 @@ public:
 	
 private:
 	void closeEvent(QCloseEvent* e);
+	void showEvent(QShowEvent* event);
 private:
 	Ui::DlgTasksClass ui;
 };

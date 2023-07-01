@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindownUlxRS.ui'
+** Form generated from reading UI file 'MainwindowkfLjLJ.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWNULXRS_H
-#define MAINWINDOWNULXRS_H
+#ifndef MAINWINDOWKFLJLJ_H
+#define MAINWINDOWKFLJLJ_H
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -48,6 +48,7 @@ public:
     QLabel *labelDate;
     QLabel *labelTime;
     QLabel *labelImage;
+    QPushButton *pushButton;
 
     void setupUi(QMainWindow *MainwindowClass)
     {
@@ -218,6 +219,9 @@ public:
         labelImage->setGeometry(QRect(460, 360, 281, 191));
         labelImage->setPixmap(QPixmap(QString::fromUtf8(":/res/panda.gif")));
         labelImage->setScaledContents(true);
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        pushButton->setGeometry(QRect(520, 770, 131, 24));
         MainwindowClass->setCentralWidget(centralWidget);
 
         retranslateUi(MainwindowClass);
@@ -232,12 +236,13 @@ public:
         btnAdd->setText(QCoreApplication::translate("MainwindowClass", "\346\267\273\345\212\240", nullptr));
         btnDel->setText(QCoreApplication::translate("MainwindowClass", "\345\210\240\351\231\244", nullptr));
         btnAddClock->setText(QCoreApplication::translate("MainwindowClass", "\346\267\273\345\212\240", nullptr));
-        btnDelClock->setText(QCoreApplication::translate("MainwindowClass", "\347\274\226\350\276\221", nullptr));
+        btnDelClock->setText(QCoreApplication::translate("MainwindowClass", "\345\210\240\351\231\244", nullptr));
         label_2->setText(QCoreApplication::translate("MainwindowClass", "\346\227\266  \351\227\264", nullptr));
         label_3->setText(QCoreApplication::translate("MainwindowClass", "\345\206\205      \345\256\271", nullptr));
         labelDate->setText(QCoreApplication::translate("MainwindowClass", "2023\345\271\2646\346\234\2107\346\227\245 \346\230\237\346\234\237\344\270\211", nullptr));
         labelTime->setText(QCoreApplication::translate("MainwindowClass", "00:00:00", nullptr));
         labelImage->setText(QString());
+        pushButton->setText(QCoreApplication::translate("MainwindowClass", "^^^^^^^^", nullptr));
     } // retranslateUi
 
 };
@@ -248,4 +253,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWNULXRS_H
+#endif // MAINWINDOWKFLJLJ_H

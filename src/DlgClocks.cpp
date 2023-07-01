@@ -1,5 +1,6 @@
 #include <QMessageBox>
 #include <QDateTime>
+#include <QDebug>
 #include "DlgClocks.h"
 
 DlgClocks::DlgClocks(QWidget *parent)
@@ -8,7 +9,6 @@ DlgClocks::DlgClocks(QWidget *parent)
 	ui.setupUi(this);
 	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // 无边框设置
 	setAttribute(Qt::WA_TranslucentBackground);// 背景透明设置
-	//ui.lineEditTime->setFocus(); //设置默认焦点
 	connect(ui.btnConfirm, &QPushButton::clicked, this, &DlgClocks::OnBtnConfirm);
 	connect(ui.btnCancel, &QPushButton::clicked, this, &DlgClocks::OnBtnCancel);
 }
@@ -47,4 +47,8 @@ void DlgClocks::OnBtnCancel() {
 
 void DlgClocks::closeEvent(QCloseEvent* e) {
 	this->close();
+}
+void DlgClocks::showEvent(QShowEvent* event) {
+	activateWindow();
+	ui.lineEditTime->setFocus(); //设置默认焦点
 }

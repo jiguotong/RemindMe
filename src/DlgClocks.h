@@ -17,6 +17,7 @@ public:
 	void OnBtnConfirm();
 	void OnBtnCancel();
 	void closeEvent(QCloseEvent* e);
+	void showEvent(QShowEvent* event);
 private:
 	Ui::DlgClocksClass ui;
 };

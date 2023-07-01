@@ -178,7 +178,34 @@ void Mainwindow::onBtnDelTaskClicked()
     }
 }
 
-void Mainwindow::recQStr(QString str) {   
+void Mainwindow::onBtnAddClockClicked() {
+    DlgClocks* dlgClock = new DlgClocks(this);
+    connect(dlgClock, &DlgClocks::sendMsg, this, &Mainwindow::recMsg);
+    // 进行阻塞
+    dlgClock->exec();
+
+    //销毁视图
+    delete dlgClock;
+    dlgClock = NULL;
+}
+
+void Mainwindow::onBtnDelClockClicked() {
+    // 暂时写在这里
+    QModelIndex index = p_tableView->currentIndex();
+    int row = index.row();
+    p_tableView->model()->removeRow(row);
+    removeClock(row);
+}
+
+void Mainwindow::slotTimerUpdate() {
+    QDateTime time = QDateTime::currentDateTime();//获取当前日期和时间
+    QString strdDate = time.toString("yyyy-MM-dd dddd");//格式为年-月-日 小时-分钟-秒 星期
+    QString strdTime = time.toString("hh:mm:ss");//格式为年-月-日 小时-分钟-秒 星期
+    ui.labelDate->setText(strdDate);
+    ui.labelTime->setText(strdTime);
+}
+
+void Mainwindow::recQStr(QString str) {
     //获取当前的行数
     int row = p_listwidget->count();
     QListWidgetItem* item = new QListWidgetItem(p_listwidget);
@@ -197,6 +224,7 @@ void Mainwindow::recQStr(QString str) {
 void Mainwindow::recMsg(QString time, QString content) {
     // 获取表格当前的行数
     int row = p_tableView->model()->rowCount();
+    int insertRow = CalRow(time);
     QStandardItem* item1 = new QStandardItem(time);
     QStandardItem* item2 = new QStandardItem(content);
     item1->setTextAlignment(Qt::AlignCenter);
@@ -207,8 +235,12 @@ void Mainwindow::recMsg(QString time, QString content) {
     item2->setForeground(QBrush(QColor("#FFFFFF")));
     item1->setBackground(QBrush(QColor("#A0F4E7")));
     item2->setBackground(QBrush(QColor("#A0F4E7")));
-    p_model->setItem(row, 0, item1);
-    p_model->setItem(row, 1, item2);
+    QList<QStandardItem*> itemList;
+    itemList << item1;
+    itemList << item2;
+    p_model->insertRow(insertRow, itemList);
+    //p_model->setItem(insertRow, 0, item1);
+    //p_model->setItem(insertRow, 1, item2);
 
     // 获取此刻时间
     QDateTime currentTime_ = QDateTime::currentDateTime();//获取当前日期和时间
@@ -216,14 +248,14 @@ void Mainwindow::recMsg(QString time, QString content) {
     //QString strdTime = currentTime.toString("hh:mm:ss");//格式为年-月-日 小时-分钟-秒 星期
     //QString strSecond = currentTime_.toString("ss");
     qDebug() << QStringLiteral("当前时间为：") << currentTime_;
-    
+
     // 拼接闹钟时间
     QString strClockTime = QString("%1 %2:%3")
         .arg(strDate).arg(time).arg("00");
     QDateTime clockTime_ = QDateTime::fromString(strClockTime, "yyyy-MM-dd hh:mm:ss");
     qDebug() << QStringLiteral("闹钟时间为：") << clockTime_;
 
-    
+
     // 计算时间差
     int elapsed = currentTime_.msecsTo(clockTime_);     // 单位是毫秒
     qDebug() << QStringLiteral("还剩时间：") << elapsed << QStringLiteral("毫秒");
@@ -231,65 +263,26 @@ void Mainwindow::recMsg(QString time, QString content) {
     // 开始计时
     int timeId = startTimer(elapsed);              // startTimer的单位是毫秒
     ClockNode* clockNode = new ClockNode{ timeId, time, content,NULL };
-    p_clockList->next = clockNode;
-    p_clockList = clockNode;        // 更新链表指针到最后一个节点
+    insertClock(insertRow, clockNode);
 }
 
-void Mainwindow::onBtnAddClockClicked() {
-    DlgClocks* dlgClock = new DlgClocks(this);
-    connect(dlgClock, &DlgClocks::sendMsg, this, &Mainwindow::recMsg);
-    // 进行阻塞
-    dlgClock->exec();
-
-    //销毁视图
-    delete dlgClock;
-    dlgClock = NULL;
-}
-
-void Mainwindow::onBtnDelClockClicked() {
-    MyDialog* remindPop = new MyDialog(this);
-    remindPop->SetLabelContent("content");
-    remindPop->SetLabelIcon(":/res/windowIcon.png");
-    remindPop->setAttribute(Qt::WA_DeleteOnClose);		// 设置退出自动销毁
-    remindPop->show();
-    // 暂时写在这里
+void Mainwindow::recCloseCommand()
+{
+    p_tableView->model()->removeRow(0);
     m_soundEffect->stop();
 }
 
-void Mainwindow::slotTimerUpdate() {
-    QDateTime time = QDateTime::currentDateTime();//获取当前日期和时间
-    QString strdDate = time.toString("yyyy-MM-dd dddd");//格式为年-月-日 小时-分钟-秒 星期
-    QString strdTime = time.toString("hh:mm:ss");//格式为年-月-日 小时-分钟-秒 星期
-    ui.labelDate->setText(strdDate);
-    ui.labelTime->setText(strdTime);
-}
-
-void Mainwindow::timerEvent(QTimerEvent* event) {
-    int timerid = event->timerId();
-    QString time;
-    QString content;
-    qDebug() << timerid;
-
-    // 从闹钟链表中移除该项并返回时钟与内容
-    removeClock(timerid, time, content);
-
-    // 表格中删除相应内容
-    
-    // 音乐
-    m_soundEffect->play();
-
-    // 弹窗
-    this->showNormal();
-    MyDialog remindPop;
-    remindPop.SetLabelContent(content);
-    remindPop.show();
-    int res = QMessageBox::warning(this, "Warning", content);
-    if(res)
-        m_soundEffect->stop();
-    
-
-    // 取消掉此计时器
-    killTimer(timerid); 
+void Mainwindow::insertClock(int insertIndex, ClockNode* clockNode) {
+    ClockNode* p = p_head->next;          // 遍历指针     
+    ClockNode* q = p_head;               // 指向上一节点的指针
+    int index = 0;
+    while (p != NULL && index != insertIndex) {
+        q = p;
+        p = p->next;
+        index++;
+    }
+    q->next = clockNode;
+    clockNode->next = p;
 }
 
 void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
@@ -310,6 +303,22 @@ void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
         q = p;
         p = p->next;
     }
+}
+
+void Mainwindow::removeClock(int index) {
+    ClockNode* p = p_head->next;          // 遍历指针     
+    ClockNode* q = p_head;               // 指向上一节点的指针
+    int count=0;
+    while (p != NULL && index!=count) {
+        count++;
+        q = p;
+        p = p->next;
+    }
+    if (p == NULL)
+        return;
+    q->next = p->next;
+    delete p;
+    p = NULL;
 }
 
 void Mainwindow::closeEvent(QCloseEvent* event) {
@@ -343,6 +352,33 @@ void Mainwindow::hideEvent(QHideEvent* event)
         event->accept();
 }
 
+void Mainwindow::timerEvent(QTimerEvent* event) {
+    int timerid = event->timerId();
+    QString time;
+    QString content;
+    qDebug() << timerid;
+
+    // 从闹钟链表中移除该项并返回时钟与内容
+    removeClock(timerid, time, content);
+
+    // 表格中删除相应内容
+
+    // 音乐
+    m_soundEffect->play();
+
+    // 弹窗
+    this->showNormal();
+    MyDialog* remindPop = new MyDialog(this);
+    remindPop->SetLabelContent(content);
+    remindPop->SetLabelIcon(":/res/windowIcon.png");
+    remindPop->setAttribute(Qt::WA_DeleteOnClose);		// 设置退出自动销毁
+    remindPop->show();
+    connect(remindPop, &MyDialog::signalMyDialogBtnCloseClicked, this, &Mainwindow::recCloseCommand);
+
+    // 取消掉此计时器
+    killTimer(timerid);
+}
+
 void Mainwindow::onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
@@ -355,4 +391,21 @@ void Mainwindow::onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason
     default:
         break;
     }
+}
+
+int Mainwindow::CalRow(QString newTime) {
+    QDateTime _newTime = QDateTime::fromString(newTime, "hh:mm");
+    ClockNode* p = p_head->next;          // 遍历指针     
+    ClockNode* q = p_head;               // 指向上一节点的指针
+    int index = 0;
+    while (p != NULL) {
+        QDateTime _tmpTime = QDateTime::fromString(p->time, "hh:mm");
+        if (_newTime <= _tmpTime) {
+            return index;
+        }
+        q = p;
+        p = p->next;
+        index++;
+    }
+    return index;
 }

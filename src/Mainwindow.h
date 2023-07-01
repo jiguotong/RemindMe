@@ -29,6 +29,9 @@ public:
 
 public:
 	void removeClock(int, QString&, QString&);
+	void Mainwindow::removeClock(int);
+	void insertClock(int, ClockNode*);
+	int CalRow(QString newTime);
 private slots:
 	void checkboxStateChanged(int);
 	void onBtnAddTaskClicked();
@@ -39,6 +42,7 @@ private slots:
 	void slotTimerUpdate();
 	void recQStr(QString);
 	void recMsg(QString,QString);
+	void recCloseCommand();
 
 
 private:
