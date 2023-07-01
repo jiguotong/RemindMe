@@ -361,14 +361,14 @@ background-color: #E7F7F3;</string>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>540</x>
       <y>770</y>
       <width>131</width>
       <height>24</height>
      </rect>
     </property>
     <property name="text">
-     <string>……</string>
+     <string>待开发…</string>
     </property>
    </widget>
   </widget>

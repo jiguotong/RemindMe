@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindowkfLjLJ.ui'
+** Form generated from reading UI file 'MainwindowTXnEUp.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWKFLJLJ_H
-#define MAINWINDOWKFLJLJ_H
+#ifndef MAINWINDOWTXNEUP_H
+#define MAINWINDOWTXNEUP_H
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -221,7 +221,7 @@ public:
         labelImage->setScaledContents(true);
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(520, 770, 131, 24));
+        pushButton->setGeometry(QRect(540, 770, 131, 24));
         MainwindowClass->setCentralWidget(centralWidget);
 
         retranslateUi(MainwindowClass);
@@ -242,7 +242,7 @@ public:
         labelDate->setText(QCoreApplication::translate("MainwindowClass", "2023\345\271\2646\346\234\2107\346\227\245 \346\230\237\346\234\237\344\270\211", nullptr));
         labelTime->setText(QCoreApplication::translate("MainwindowClass", "00:00:00", nullptr));
         labelImage->setText(QString());
-        pushButton->setText(QCoreApplication::translate("MainwindowClass", "^^^^^^^^", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainwindowClass", "\345\276\205\345\274\200\345\217\221\342\200\246", nullptr));
     } // retranslateUi
 
 };
@@ -253,4 +253,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWKFLJLJ_H
+#endif // MAINWINDOWTXNEUP_H
