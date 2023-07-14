@@ -7,6 +7,7 @@
 #include <QStandardItemModel>
 #include <QTimer>
 #include <QDateTime>
+#include <QPropertyAnimation>
 #include <QMovie>
 #include "DlgTasks.h"
 #include "DlgClocks.h"
@@ -46,7 +47,8 @@ void Mainwindow::initWindow() {
 
     // 初始化背景音乐
     m_soundEffect = new QSoundEffect(this);
-    m_soundEffect->setSource(QUrl::fromLocalFile("C:\\Users\\Administrator\\Desktop\\RemindMe\\src\\res\\Alarm01.wav"));
+    //m_soundEffect->setSource(QUrl::fromLocalFile("C:\\Users\\Administrator\\Desktop\\RemindMe\\src\\res\\Alarm01.wav"));
+    m_soundEffect->setSource(QUrl::fromLocalFile(":/res/Alarm01.wav"));
     m_soundEffect->setLoopCount(QSoundEffect::Infinite);
     m_soundEffect->setVolume(0.25f);
 
@@ -61,6 +63,8 @@ void Mainwindow::initWindow() {
     m_tray->setToolTip(QStringLiteral("RemindMe"));
     m_tray->show();
 
+    // 设置窗口隐藏
+    ui.frameSettings->hide();
     // 用于实时刷新时间的定时器
     p_timeUpdate = new QTimer(this);
     p_timeUpdate->start(1000);
@@ -73,6 +77,11 @@ void Mainwindow::initConnect() {
     connect(ui.btnDelClock, &QPushButton::clicked, this, &Mainwindow::onBtnDelClockClicked);
     connect(p_timeUpdate, &QTimer::timeout, this, &Mainwindow::slotTimerUpdate);
     connect(m_tray, &QSystemTrayIcon::activated, this, &Mainwindow::onActivatedSysTrayIcon);
+    connect(ui.btnClear, &QPushButton::clicked, this, &Mainwindow::ClearAll);
+    connect(ui.btnSwitch, &QPushButton::clicked, this, &Mainwindow::onBtnSwitchClicked);
+    // 测试专用
+    connect(ui.btnShowSettings, &QPushButton::clicked, this, &Mainwindow::ShowSettings);
+    connect(ui.btnHideSettings, &QPushButton::clicked, this, &Mainwindow::HideSettings);
 }
 
 void Mainwindow::initCheckBox(){
@@ -170,7 +179,7 @@ void Mainwindow::onBtnDelTaskClicked()
         return;
     }
     QListWidgetItem* item = p_listwidget->item(row);
-    //将QWidget 转化为QCheckBox  获取第roew个item 的控件
+    //将QWidget 转化为QCheckBox  获取第row个item 的控件
     QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
     if (checkbox->isChecked()) {
         p_listwidget->takeItem(row);
@@ -190,7 +199,6 @@ void Mainwindow::onBtnAddClockClicked() {
 }
 
 void Mainwindow::onBtnDelClockClicked() {
-    // 暂时写在这里
     QModelIndex index = p_tableView->currentIndex();
     int row = index.row();
     p_tableView->model()->removeRow(row);
@@ -317,8 +325,22 @@ void Mainwindow::removeClock(int index) {
     if (p == NULL)
         return;
     q->next = p->next;
+    killTimer(p->timerId);  // 关掉绑定的计时器
     delete p;
     p = NULL;
+}
+
+void Mainwindow::clearClock()
+{
+    ClockNode* p = p_head->next;          // 遍历指针     
+    ClockNode* q = p_head;               // 指向上一节点的指针
+    while (p!=NULL){
+        q = p->next; //q变量存放p的下一指针域
+        killTimer(p->timerId);  // 关掉绑定的计时器
+        delete p; //释放p
+        p = q; //将q变量中的内容返还给p
+    }
+    p_head->next = NULL;
 }
 
 void Mainwindow::closeEvent(QCloseEvent* event) {
@@ -364,7 +386,8 @@ void Mainwindow::timerEvent(QTimerEvent* event) {
     // 表格中删除相应内容
 
     // 音乐
-    m_soundEffect->play();
+    if(soundSwitch)
+         m_soundEffect->play();
 
     // 弹窗
     this->showNormal();
@@ -408,4 +431,61 @@ int Mainwindow::CalRow(QString newTime) {
         index++;
     }
     return index;
+}
+
+void Mainwindow::ShowSettings()
+{
+    ui.btnShowSettings->hide();
+    ui.frameSettings->show();
+    QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry");
+    animation->setDuration(500);       // 设置动画时间
+    animation->setStartValue(QRect(QPoint(0,270),QSize(0, 270)));
+    animation->setEndValue(QRect(QPoint(0, 270), QSize(150, 270)));
+
+    animation->start();
+    //delete animation;
+}
+
+void Mainwindow::HideSettings() {
+    
+    QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry");
+    animation->setDuration(100);       // 设置动画时间
+    animation->setStartValue(QRect(QPoint(0, 270), QSize(150, 270)));
+    animation->setEndValue(QRect(QPoint(0, 270), QSize(0, 270)));
+    // 需要设置自动销毁
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+    ui.btnShowSettings->show();
+    
+}
+
+void Mainwindow::ClearAll()
+{
+    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("确认"), QStringLiteral("您确定要清空所有日程与闹钟内容吗？"),
+        QMessageBox::Yes | QMessageBox::Cancel,
+        QMessageBox::Yes);
+
+    if (result == QMessageBox::Yes) {
+        // 1.清空日程
+        p_listwidget->clear();
+        qDebug() << QStringLiteral("日程已清空");
+        // 2.清空闹钟链表
+        clearClock();
+        qDebug() << QStringLiteral("闹钟已清空");
+        // 3.清空闹钟显示
+        p_tableView->model()->removeRows(0, p_tableView->model()->rowCount()); //删除所有行;
+        qDebug() << QStringLiteral("闹钟显示已清空");
+    }
+}
+
+void Mainwindow::onBtnSwitchClicked() {
+    if (soundSwitch) {
+        soundSwitch = false;
+        QIcon icon(":/res/switch_off.png");  // 从资源文件加载图标，注意替换正确的路径
+        ui.btnSwitch->setIcon(icon);
+    }
+    else {
+        soundSwitch = true;
+        QIcon icon(":/res/switch_on.png");  // 从资源文件加载图标，注意替换正确的路径
+        ui.btnSwitch->setIcon(icon);
+    }
 }

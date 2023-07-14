@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindowTXnEUp.ui'
+** Form generated from reading UI file 'MainwindowrjhXJl.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWTXNEUP_H
-#define MAINWINDOWTXNEUP_H
+#ifndef MAINWINDOWRJHXJL_H
+#define MAINWINDOWRJHXJL_H
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -48,7 +48,14 @@ public:
     QLabel *labelDate;
     QLabel *labelTime;
     QLabel *labelImage;
-    QPushButton *pushButton;
+    QFrame *frameSettings;
+    QPushButton *btnHideSettings;
+    QPushButton *btnClear;
+    QPushButton *btnSwitch;
+    QLabel *label_4;
+    QLabel *label_5;
+    QLabel *label_6;
+    QPushButton *btnShowSettings;
 
     void setupUi(QMainWindow *MainwindowClass)
     {
@@ -219,9 +226,124 @@ public:
         labelImage->setGeometry(QRect(460, 360, 281, 191));
         labelImage->setPixmap(QPixmap(QString::fromUtf8(":/res/panda.gif")));
         labelImage->setScaledContents(true);
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(540, 770, 131, 24));
+        frameSettings = new QFrame(centralWidget);
+        frameSettings->setObjectName(QString::fromUtf8("frameSettings"));
+        frameSettings->setEnabled(true);
+        frameSettings->setGeometry(QRect(0, 270, 150, 270));
+        frameSettings->setStyleSheet(QString::fromUtf8("#frameSettings\n"
+"{\n"
+"	background-color: #fb6666;\n"
+"}\n"
+"#btnSwitch\n"
+"{\n"
+"	min-width:0px;		/*\346\216\247\344\273\266\346\234\200\345\260\217\345\256\275\345\272\246*/\n"
+"	min-height:0px;	/*\346\216\247\344\273\266\346\234\200\345\260\217\351\253\230\345\272\246*/\n"
+"	background-color: #fb6666;\n"
+"	background-image: url('qrc:/res/switch_on.png');\n"
+"    background-position: center;\n"
+"    background-repeat: no-repeat;\n"
+"}\n"
+"#btnClear\n"
+"{\n"
+"	min-width:0px;		/*\346\216\247\344\273\266\346\234\200\345\260\217\345\256\275\345\272\246*/\n"
+"	min-height:0px;	/*\346\216\247\344\273\266\346\234\200\345\260\217\351\253\230\345\272\246*/\n"
+"	background-color: #fb6666;\n"
+"    background-position: center;\n"
+"    background-repeat: no-repeat;\n"
+"}\n"
+"#btnClear:hover\n"
+"{\n"
+"	background-color: rgb(22,218,208);\n"
+"}\n"
+"#btnClear:pressed\n"
+"{\n"
+"	background-color: rgb(17,171,164);\n"
+"}\n"
+"#btnHideSettings\n"
+"{\n"
+"/*\n"
+"	font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
+""
+                        "	color: rgb(255,255,255);\n"
+"	background-color: rgb(20,196,188);\n"
+"	border:none;\n"
+"	min-width:75px;		//\346\216\247\344\273\266\346\234\200\345\260\217\345\256\275\345\272\246\n"
+"    min-height:24px;	//\346\216\247\344\273\266\346\234\200\345\260\217\351\253\230\345\272\246\n"
+"	border-radius:10px;*/\n"
+"	background-color: #fb6666;\n"
+"	min-width:0px;		/*\346\216\247\344\273\266\346\234\200\345\260\217\345\256\275\345\272\246*/\n"
+"	min-height:0px;	/*\346\216\247\344\273\266\346\234\200\345\260\217\351\253\230\345\272\246*/\n"
+"}\n"
+"#btnHideSettings:hover\n"
+"{\n"
+"	background-color: rgb(22,218,208);\n"
+"}\n"
+"QLabel\n"
+"{\n"
+"	font: 25 12pt '\346\200\235\346\272\220\351\273\221\344\275\223 CN BOLD';\n"
+"	color: rgb(255,255,255);\n"
+"	border:border\n"
+"}"));
+        frameSettings->setFrameShape(QFrame::StyledPanel);
+        frameSettings->setFrameShadow(QFrame::Raised);
+        btnHideSettings = new QPushButton(frameSettings);
+        btnHideSettings->setObjectName(QString::fromUtf8("btnHideSettings"));
+        btnHideSettings->setGeometry(QRect(135, 105, 15, 80));
+        btnHideSettings->setMinimumSize(QSize(0, 0));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/res/line_left.png"), QSize(), QIcon::Normal, QIcon::Off);
+        btnHideSettings->setIcon(icon1);
+        btnClear = new QPushButton(frameSettings);
+        btnClear->setObjectName(QString::fromUtf8("btnClear"));
+        btnClear->setGeometry(QRect(82, 50, 31, 24));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/res/clear.png"), QSize(), QIcon::Normal, QIcon::Off);
+        btnClear->setIcon(icon2);
+        btnSwitch = new QPushButton(frameSettings);
+        btnSwitch->setObjectName(QString::fromUtf8("btnSwitch"));
+        btnSwitch->setGeometry(QRect(77, 90, 51, 24));
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/res/switch_on.png"), QSize(), QIcon::Normal, QIcon::Off);
+        btnSwitch->setIcon(icon3);
+        btnSwitch->setIconSize(QSize(80, 40));
+        label_4 = new QLabel(frameSettings);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setGeometry(QRect(-4, 50, 71, 21));
+        label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_5 = new QLabel(frameSettings);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(16, 90, 51, 20));
+        label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_6 = new QLabel(frameSettings);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setGeometry(QRect(0, 0, 150, 30));
+        label_6->setStyleSheet(QString::fromUtf8("border-bottom-style: solid;\n"
+"border-bottom-width: 1px;\n"
+"border-bottom-color: white;\n"
+"border-bottom: 1px solid white;"));
+        label_6->setAlignment(Qt::AlignCenter);
+        btnShowSettings = new QPushButton(centralWidget);
+        btnShowSettings->setObjectName(QString::fromUtf8("btnShowSettings"));
+        btnShowSettings->setGeometry(QRect(0, 375, 10, 80));
+        btnShowSettings->setStyleSheet(QString::fromUtf8("#btnShowSettings\n"
+"{\n"
+"/*\n"
+"	font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
+"	color: rgb(255,255,255);\n"
+"	background-color: rgb(20,196,188);\n"
+"	border:none;*/\n"
+"	border-radius:0px;\n"
+"	background-color: #fb6666;\n"
+"	min-width:0px;		/*\346\216\247\344\273\266\346\234\200\345\260\217\345\256\275\345\272\246*/\n"
+"	min-height:0px;	/*\346\216\247\344\273\266\346\234\200\345\260\217\351\253\230\345\272\246*/\n"
+"}\n"
+"#btnShowSettings:hover\n"
+"{\n"
+"	background-color: rgb(22,218,208);\n"
+"}"));
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8(":/res/line_right.png"), QSize(), QIcon::Normal, QIcon::Off);
+        btnShowSettings->setIcon(icon4);
         MainwindowClass->setCentralWidget(centralWidget);
 
         retranslateUi(MainwindowClass);
@@ -242,7 +364,13 @@ public:
         labelDate->setText(QCoreApplication::translate("MainwindowClass", "2023\345\271\2646\346\234\2107\346\227\245 \346\230\237\346\234\237\344\270\211", nullptr));
         labelTime->setText(QCoreApplication::translate("MainwindowClass", "00:00:00", nullptr));
         labelImage->setText(QString());
-        pushButton->setText(QCoreApplication::translate("MainwindowClass", "\345\276\205\345\274\200\345\217\221\342\200\246", nullptr));
+        btnHideSettings->setText(QString());
+        btnClear->setText(QString());
+        btnSwitch->setText(QString());
+        label_4->setText(QCoreApplication::translate("MainwindowClass", "\344\270\200\351\224\256\346\270\205\347\251\272", nullptr));
+        label_5->setText(QCoreApplication::translate("MainwindowClass", "\346\217\220\347\244\272\351\237\263", nullptr));
+        label_6->setText(QCoreApplication::translate("MainwindowClass", "\350\256\276  \347\275\256", nullptr));
+        btnShowSettings->setText(QString());
     } // retranslateUi
 
 };
@@ -253,4 +381,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWTXNEUP_H
+#endif // MAINWINDOWRJHXJL_H

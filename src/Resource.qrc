@@ -1,6 +1,12 @@
 <RCC>
-  <qresource prefix="/">
-    <file>res/panda.gif</file>
-    <file>res/windowIcon.png</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>res/panda.gif</file>
+        <file>res/windowIcon.png</file>
+        <file>res/Alarm01.wav</file>
+        <file>res/switch_off.png</file>
+        <file>res/switch_on.png</file>
+        <file>res/clear.png</file>
+        <file>res/line_left.png</file>
+        <file>res/line_right.png</file>
+    </qresource>
 </RCC>

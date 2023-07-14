@@ -36,6 +36,15 @@ void DlgClocks::OnBtnConfirm() {
 		QMessageBox::warning(this, "Warning", QStringLiteral("    时间格式不正确    "));
 		return;
 	}
+	QDateTime time = QDateTime::currentDateTime();//获取当前日期和时间
+	QString strdTime = time.toString("hh:mm");//格式为年-月-日 小时-分钟-秒 星期
+	time = QDateTime::fromString(strdTime, "hh:mm");
+	if (date < time) {
+		QMessageBox::warning(this, "Warning", QStringLiteral("    请输入晚于此刻的时间    "));
+		return;
+	}
+
+
 	
 	emit sendMsg(timeStr, contentStr);
 	this->close();

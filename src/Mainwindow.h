@@ -29,15 +29,20 @@ public:
 
 public:
 	void removeClock(int, QString&, QString&);
-	void Mainwindow::removeClock(int);
+	void removeClock(int);
 	void insertClock(int, ClockNode*);
+	void clearClock();
 	int CalRow(QString newTime);
+	void ShowSettings();
+	void HideSettings();
+	void ClearAll();
 private slots:
 	void checkboxStateChanged(int);
 	void onBtnAddTaskClicked();
 	void onBtnDelTaskClicked();
 	void onBtnAddClockClicked();
 	void onBtnDelClockClicked();
+	void onBtnSwitchClicked();
 	void onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason);
 	void slotTimerUpdate();
 	void recQStr(QString);
@@ -61,6 +66,7 @@ private:
 	ClockList p_clockList;				// 存放闹钟节点的链表
 	ClockNode* p_head;					// 头指针
 
+	bool soundSwitch = true;			// 音乐开关
 	QSoundEffect* m_soundEffect;		// 音效播放
 	QSystemTrayIcon* m_tray = nullptr;	// 系统托盘
 };

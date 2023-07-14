@@ -358,17 +358,230 @@ background-color: #E7F7F3;</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QFrame" name="frameSettings">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>770</y>
-      <width>131</width>
-      <height>24</height>
+      <x>0</x>
+      <y>270</y>
+      <width>150</width>
+      <height>270</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">#frameSettings
+{
+	background-color: #fb6666;
+}
+#btnSwitch
+{
+	min-width:0px;		/*控件最小宽度*/
+	min-height:0px;	/*控件最小高度*/
+	background-color: #fb6666;
+	background-image: url('qrc:/res/switch_on.png');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#btnClear
+{
+	min-width:0px;		/*控件最小宽度*/
+	min-height:0px;	/*控件最小高度*/
+	background-color: #fb6666;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#btnClear:hover
+{
+	background-color: rgb(22,218,208);
+}
+#btnClear:pressed
+{
+	background-color: rgb(17,171,164);
+}
+#btnHideSettings
+{
+/*
+	font: 25 12pt '微软雅黑';
+	color: rgb(255,255,255);
+	background-color: rgb(20,196,188);
+	border:none;
+	min-width:75px;		//控件最小宽度
+    min-height:24px;	//控件最小高度
+	border-radius:10px;*/
+	background-color: #fb6666;
+	min-width:0px;		/*控件最小宽度*/
+	min-height:0px;	/*控件最小高度*/
+}
+#btnHideSettings:hover
+{
+	background-color: rgb(22,218,208);
+}
+QLabel
+{
+	font: 25 12pt '思源黑体 CN BOLD';
+	color: rgb(255,255,255);
+	border:border
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="btnHideSettings">
+     <property name="geometry">
+      <rect>
+       <x>135</x>
+       <y>105</y>
+       <width>15</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="Resource.qrc">
+       <normaloff>:/res/line_left.png</normaloff>:/res/line_left.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnClear">
+     <property name="geometry">
+      <rect>
+       <x>82</x>
+       <y>50</y>
+       <width>31</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="Resource.qrc">
+       <normaloff>:/res/clear.png</normaloff>:/res/clear.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnSwitch">
+     <property name="geometry">
+      <rect>
+       <x>77</x>
+       <y>90</y>
+       <width>51</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="Resource.qrc">
+       <normaloff>:/res/switch_on.png</normaloff>:/res/switch_on.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>40</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>-4</x>
+       <y>50</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>一键清空</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>16</x>
+       <y>90</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>提示音</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>150</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-bottom-style: solid;
+border-bottom-width: 1px;
+border-bottom-color: white;
+border-bottom: 1px solid white;</string>
+     </property>
+     <property name="text">
+      <string>设  置</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="btnShowSettings">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>375</y>
+      <width>10</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#btnShowSettings
+{
+/*
+	font: 25 12pt '微软雅黑';
+	color: rgb(255,255,255);
+	background-color: rgb(20,196,188);
+	border:none;*/
+	border-radius:0px;
+	background-color: #fb6666;
+	min-width:0px;		/*控件最小宽度*/
+	min-height:0px;	/*控件最小高度*/
+}
+#btnShowSettings:hover
+{
+	background-color: rgb(22,218,208);
+}</string>
+    </property>
     <property name="text">
-     <string>待开发…</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="Resource.qrc">
+      <normaloff>:/res/line_right.png</normaloff>:/res/line_right.png</iconset>
     </property>
    </widget>
   </widget>
