@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindowrjhXJl.ui'
+** Form generated from reading UI file 'MainwindowamFEIE.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWRJHXJL_H
-#define MAINWINDOWRJHXJL_H
+#ifndef MAINWINDOWAMFEIE_H
+#define MAINWINDOWAMFEIE_H
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -381,4 +381,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWRJHXJL_H
+#endif // MAINWINDOWAMFEIE_H
