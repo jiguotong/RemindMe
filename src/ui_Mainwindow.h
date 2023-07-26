@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainwindowamFEIE.ui'
+** Form generated from reading UI file 'MainwindowaAkALD.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWAMFEIE_H
-#define MAINWINDOWAMFEIE_H
+#ifndef MAINWINDOWAAKALD_H
+#define MAINWINDOWAAKALD_H
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -61,7 +61,7 @@ public:
     {
         if (MainwindowClass->objectName().isEmpty())
             MainwindowClass->setObjectName(QString::fromUtf8("MainwindowClass"));
-        MainwindowClass->resize(1200, 800);
+        MainwindowClass->resize(1182, 800);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/res/windowIcon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainwindowClass->setWindowIcon(icon);
@@ -198,7 +198,7 @@ public:
         label_3->setAlignment(Qt::AlignCenter);
         labelDate = new QLabel(centralWidget);
         labelDate->setObjectName(QString::fromUtf8("labelDate"));
-        labelDate->setGeometry(QRect(512, 110, 171, 41));
+        labelDate->setGeometry(QRect(501, 110, 200, 41));
         labelDate->setStyleSheet(QString::fromUtf8("font: 25 12pt '\345\276\256\350\275\257\351\233\205\351\273\221';\n"
 "color : #F89F92;\n"
 "font-weight:bold;\n"
@@ -207,7 +207,7 @@ public:
         labelDate->setAlignment(Qt::AlignCenter);
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QString::fromUtf8("labelTime"));
-        labelTime->setGeometry(QRect(510, 170, 171, 51));
+        labelTime->setGeometry(QRect(500, 170, 200, 51));
         QFont font;
         font.setFamily(QString::fromUtf8("Pixel LCD7"));
         font.setPointSize(20);
@@ -295,24 +295,24 @@ public:
         btnHideSettings->setIcon(icon1);
         btnClear = new QPushButton(frameSettings);
         btnClear->setObjectName(QString::fromUtf8("btnClear"));
-        btnClear->setGeometry(QRect(82, 50, 31, 24));
+        btnClear->setGeometry(QRect(90, 50, 31, 24));
         QIcon icon2;
         icon2.addFile(QString::fromUtf8(":/res/clear.png"), QSize(), QIcon::Normal, QIcon::Off);
         btnClear->setIcon(icon2);
         btnSwitch = new QPushButton(frameSettings);
         btnSwitch->setObjectName(QString::fromUtf8("btnSwitch"));
-        btnSwitch->setGeometry(QRect(77, 90, 51, 24));
+        btnSwitch->setGeometry(QRect(90, 90, 51, 24));
         QIcon icon3;
         icon3.addFile(QString::fromUtf8(":/res/switch_on.png"), QSize(), QIcon::Normal, QIcon::Off);
         btnSwitch->setIcon(icon3);
         btnSwitch->setIconSize(QSize(80, 40));
         label_4 = new QLabel(frameSettings);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(-4, 50, 71, 21));
+        label_4->setGeometry(QRect(-10, 50, 91, 21));
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         label_5 = new QLabel(frameSettings);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(16, 90, 51, 20));
+        label_5->setGeometry(QRect(20, 90, 61, 20));
         label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         label_6 = new QLabel(frameSettings);
         label_6->setObjectName(QString::fromUtf8("label_6"));
@@ -381,4 +381,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWAMFEIE_H
+#endif // MAINWINDOWAAKALD_H
