@@ -5,6 +5,8 @@
 #include <QMessageBox>
 #include <QDateTime>
 #define _CRTDBG_MAP_ALLOC
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 #include <stdlib.h>
 #include <crtdbg.h>
 
@@ -18,15 +20,15 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     qDebug() << "QApplication start!";
 
-    /*时间有效期为3天，三天后不可用！*/
-    QDateTime baseTime = QDateTime::fromString("2023-07-20 00:00:00", "yyyy-MM-dd hh:mm:ss");       // 规定一个初始化基准时间
-    QDateTime currentTime = QDateTime::currentDateTime();                                           //获取系统当前的时间
-    int startTime = baseTime.toTime_t();        //将当前时间转为时间戳
-    int endTime = currentTime.toTime_t();       //将当前时间转为时间戳
-    if (endTime - startTime > 86400*30) {
-        QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
-        return -1;
-    }
+    ///*时间有效期为3天，三天后不可用！*/
+    //QDateTime baseTime = QDateTime::fromString("2023-10-17 00:00:00", "yyyy-MM-dd hh:mm:ss");       // 规定一个初始化基准时间
+    //QDateTime currentTime = QDateTime::currentDateTime();                                           //获取系统当前的时间
+    //int startTime = baseTime.toTime_t();        //将当前时间转为时间戳
+    //int endTime = currentTime.toTime_t();       //将当前时间转为时间戳
+    //if (endTime - startTime > 86400*15) {
+    //    QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
+    //    return -1;
+    //}
 
 
     // 设置一个互斥量
@@ -45,6 +47,9 @@ int main(int argc, char *argv[])
     w.show(); 
 
     return a.exec(); 
+
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+    _CrtDumpMemoryLeaks();
 }   
 
 
