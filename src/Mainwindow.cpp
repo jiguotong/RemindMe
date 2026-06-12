@@ -112,13 +112,13 @@ void Mainwindow::initConnect()
 
 void Mainwindow::initCheckBox()
 {
-    p_listwidget = new QListWidget(this);
+    p_listwidget = new QListWidget(ui.centralWidget);
     p_listwidget->setFrameShape(QFrame::NoFrame);
 }
 
 void Mainwindow::initTable()
 {
-    p_tableView = new QTableView(this);
+    p_tableView = new QTableView(ui.centralWidget);
     p_tableView->setFrameShape(QFrame::NoFrame);
     p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     p_tableView->setSelectionMode(QAbstractItemView::SingleSelection);
