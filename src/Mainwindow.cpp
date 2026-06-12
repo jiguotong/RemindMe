@@ -29,43 +29,42 @@ Mainwindow::~Mainwindow(){}
 
 void Mainwindow::initWindow() {
 
-    // ´°¿Ú
-    setFixedSize(1200, 800);
+    // ï¿½ï¿½ï¿½ï¿½
     setWindowIcon(QIcon(":/res/windowIcon.png"));
-    setWindowTitle(QStringLiteral("½ñÌìÄãÈ«Á¦ÒÔ¸°ÁËÂğ£¿"));
-    // ¿Ø¼ş
+    setWindowTitle(QStringLiteral("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½"));
+    // ï¿½Ø¼ï¿½
     ui.btnAdd->setShortcut(tr("Ctrl+Q"));
     ui.btnDel->setShortcut(tr("Ctrl+W"));
     ui.btnAddClock->setShortcut(tr("Ctrl+E"));
     ui.btnDelClock->setShortcut(tr("Ctrl+R"));
 
-    // ³õÊ¼»¯¶¯Ì¬Í¼
+    // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ì¬Í¼
     QMovie *movie = new QMovie(":/res/panda.gif");
     ui.labelImage->setMovie(movie);
     movie->start();
     ui.labelImage->show();
 
-    // ³õÊ¼»¯±³¾°ÒôÀÖ
+    // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     m_soundEffect = new QSoundEffect(this);
     //m_soundEffect->setSource(QUrl::fromLocalFile("C:\\Users\\Administrator\\Desktop\\RemindMe\\src\\res\\Alarm01.wav"));
     m_soundEffect->setSource(QUrl::fromLocalFile(":/res/Alarm01.wav"));
     m_soundEffect->setLoopCount(QSoundEffect::Infinite);
     m_soundEffect->setVolume(0.25f);
 
-    // ÄÖÖÓÁ´±í³õÊ¼»¯£¬Ôö¼ÓÍ·½Úµã
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Úµï¿½
     ClockNode* headNode= new ClockNode;
     p_head = headNode;
     p_clockList = headNode;
 
-    // ÏµÍ³ÍĞÅÌ
+    // ÏµÍ³ï¿½ï¿½ï¿½ï¿½
     m_tray = new QSystemTrayIcon(this);
     m_tray->setIcon(QIcon(":/res/windowIcon.png"));
     m_tray->setToolTip(QStringLiteral("RemindMe"));
     m_tray->show();
 
-    // ÉèÖÃ´°¿ÚÒş²Ø
+    // ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     ui.frameSettings->hide();
-    // ÓÃÓÚÊµÊ±Ë¢ĞÂÊ±¼äµÄ¶¨Ê±Æ÷
+    // ï¿½ï¿½ï¿½ï¿½ÊµÊ±Ë¢ï¿½ï¿½Ê±ï¿½ï¿½Ä¶ï¿½Ê±ï¿½ï¿½
     p_timeUpdate = new QTimer(this);
     p_timeUpdate->start(1000);
 }
@@ -79,34 +78,29 @@ void Mainwindow::initConnect() {
     connect(m_tray, &QSystemTrayIcon::activated, this, &Mainwindow::onActivatedSysTrayIcon);
     connect(ui.btnClear, &QPushButton::clicked, this, &Mainwindow::ClearAll);
     connect(ui.btnSwitch, &QPushButton::clicked, this, &Mainwindow::onBtnSwitchClicked);
-    // ²âÊÔ×¨ÓÃ
+    // ï¿½ï¿½ï¿½ï¿½×¨ï¿½ï¿½
     connect(ui.btnShowSettings, &QPushButton::clicked, this, &Mainwindow::ShowSettings);
     connect(ui.btnHideSettings, &QPushButton::clicked, this, &Mainwindow::HideSettings);
 }
 
 void Mainwindow::initCheckBox(){
     p_listwidget = new QListWidget(this);
-    p_listwidget->move(200, 100);
-    p_listwidget->resize(200, 500);
-    //p_listwidget->setStyleSheet("background-color:transparent");
     p_listwidget->setFrameShape(QFrame::NoFrame);
 }
 
 void Mainwindow::initTable() {
-    /* ´´½¨±í¸ñÊÓÍ¼ */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ */
     p_tableView = new QTableView(this);
 
-    /* ÉèÖÃ±í¸ñÊÓÍ¼´óĞ¡ */
-    p_tableView->resize(200, 500);
-    p_tableView->move(800, 100);
+    /* å°ºå¯¸ä¸ä½ç½®ç”± repositionWidgets() åœ¨ resizeEvent ä¸­ç»Ÿä¸€è®¾ç½® */
     p_tableView->setFrameShape(QFrame::NoFrame);
     //p_tableView->setStyleSheet("background-color:transparent");                                       
-    p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                // ÉèÖÃÎª²»¿É±à¼­
-    p_tableView->setSelectionMode(QAbstractItemView::NoSelection);                  // ÉèÖÃÎª²»¿ÉÑ¡ÖĞ
+    p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                // ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½É±à¼­
+    p_tableView->setSelectionMode(QAbstractItemView::NoSelection);                  // ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½
 
     p_tableView->verticalHeader()->hide();
     p_tableView->horizontalHeader()->hide();
-    p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    // ×ÔÊÊÓ¦ËùÓĞÁĞ£¬ÈÃËü²¼Âú¿Õ¼ä
+    p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    // ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½Ğ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½
     
 
 
@@ -117,37 +111,39 @@ color: white;}");*/
 qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
 color: white;}");*/
 
-    // ´´½¨Êı¾İÄ£ĞÍ */
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ */
     p_model = new QStandardItemModel();
     
-    // ÉèÖÃ±í¸ñ±êÌâĞĞ(ÊäÈëÊı¾İÎªQStringListÀàĞÍ)
+    // ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªQStringListï¿½ï¿½ï¿½ï¿½)
     p_model->setHorizontalHeaderLabels({ "Time", "Content" });
 
-    ///* ¼ÓÔØ¹²10ĞĞÊı¾İ£¬²¢Ã¿ĞĞÓĞ6ÁĞÊı¾İ */
+    ///* ï¿½ï¿½ï¿½Ø¹ï¿½10ï¿½ï¿½ï¿½ï¿½ï¿½İ£ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½6ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     //for (int i = 0; i < 10; i++) {
-    //    /* ¼ÓÔØµÚÒ»ÁĞ(ID)Êı¾İ */
+    //    /* ï¿½ï¿½ï¿½Øµï¿½Ò»ï¿½ï¿½(ID)ï¿½ï¿½ï¿½ï¿½ */
     //    model->setItem(i, 0, new QStandardItem(QString("100%1").arg(i)));
-    //    /* ¼ÓÔØµÚ¶şÁĞ(User Name)Êı¾İ */
+    //    /* ï¿½ï¿½ï¿½ØµÚ¶ï¿½ï¿½ï¿½(User Name)ï¿½ï¿½ï¿½ï¿½ */
     //    model->setItem(i, 1, new QStandardItem(QString("User%1").arg(i)));
     //}
 
-    /* ÉèÖÃ±í¸ñÊÓÍ¼Êı¾İ */
+    /* ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ */
     p_tableView->setModel(p_model);
 
-    p_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);//¶ÔµÚ0ÁĞµ¥¶ÀÉèÖÃ¹Ì¶¨¿í¶È
-    p_tableView->setColumnWidth(0, 60);       //ÉèÖÃµÚ1ÁĞ¿í100
+    p_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);//ï¿½Ôµï¿½0ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¹Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½
+    p_tableView->setColumnWidth(0, 60);       //ï¿½ï¿½ï¿½Ãµï¿½1ï¿½Ğ¿ï¿½100
 
-    /* ÏÔÊ¾ */
+    /* ï¿½ï¿½Ê¾ */
     p_tableView->show();
+    // åˆå§‹å¸ƒå±€ï¼ˆçª—å£å°ºå¯¸åœ¨ show() åæ‰ç¡®å®šï¼ŒresizeEvent ä¼šäºŒæ¬¡è§¦å‘ï¼‰
+    repositionWidgets();
 }
 
 void Mainwindow::checkboxStateChanged(int)
 {
     QStringList itemList;
-    //±éÀúµ±Ç°µÄlistwidget
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½listwidget
     for (int i = 0; i < p_listwidget->count(); i++){
         QListWidgetItem* item = p_listwidget->item(i);
-        //½«QWidget ×ª»¯ÎªQCheckBox  »ñÈ¡µÚi¸öitem µÄ¿Ø¼ş
+        //ï¿½ï¿½QWidget ×ªï¿½ï¿½ÎªQCheckBox  ï¿½ï¿½È¡ï¿½ï¿½iï¿½ï¿½item ï¿½Ä¿Ø¼ï¿½
         QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
         if (checkbox->isChecked())
         {
@@ -166,20 +162,20 @@ void Mainwindow::onBtnAddTaskClicked()
 
     dlgTask->exec();
 
-    //Ïú»ÙÊÓÍ¼
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
     delete dlgTask;
     dlgTask = NULL; 
 }
 
 void Mainwindow::onBtnDelTaskClicked()
 {
-    //»ñÈ¡µ±Ç°Ñ¡ÖĞĞĞ
+    //ï¿½ï¿½È¡ï¿½ï¿½Ç°Ñ¡ï¿½ï¿½ï¿½ï¿½
     int row = p_listwidget->currentRow();
     if (row < 0) {
         return;
     }
     QListWidgetItem* item = p_listwidget->item(row);
-    //½«QWidget ×ª»¯ÎªQCheckBox  »ñÈ¡µÚrow¸öitem µÄ¿Ø¼ş
+    //ï¿½ï¿½QWidget ×ªï¿½ï¿½ÎªQCheckBox  ï¿½ï¿½È¡ï¿½ï¿½rowï¿½ï¿½item ï¿½Ä¿Ø¼ï¿½
     QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
     if (checkbox->isChecked()) {
         p_listwidget->takeItem(row);
@@ -190,10 +186,10 @@ void Mainwindow::onBtnDelTaskClicked()
 void Mainwindow::onBtnAddClockClicked() {
     DlgClocks* dlgClock = new DlgClocks(this);
     connect(dlgClock, &DlgClocks::sendMsg, this, &Mainwindow::recMsg);
-    // ½øĞĞ×èÈû
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     dlgClock->exec();
 
-    //Ïú»ÙÊÓÍ¼
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
     delete dlgClock;
     dlgClock = NULL;
 }
@@ -206,19 +202,19 @@ void Mainwindow::onBtnDelClockClicked() {
 }
 
 void Mainwindow::slotTimerUpdate() {
-    QDateTime time = QDateTime::currentDateTime();//»ñÈ¡µ±Ç°ÈÕÆÚºÍÊ±¼ä
-    QString strdDate = time.toString("yyyy-MM-dd dddd");//¸ñÊ½ÎªÄê-ÔÂ-ÈÕ Ğ¡Ê±-·ÖÖÓ-Ãë ĞÇÆÚ
-    QString strdTime = time.toString("hh:mm:ss");//¸ñÊ½ÎªÄê-ÔÂ-ÈÕ Ğ¡Ê±-·ÖÖÓ-Ãë ĞÇÆÚ
+    QDateTime time = QDateTime::currentDateTime();//ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Úºï¿½Ê±ï¿½ï¿½
+    QString strdDate = time.toString("yyyy-MM-dd dddd");//ï¿½ï¿½Ê½Îªï¿½ï¿½-ï¿½ï¿½-ï¿½ï¿½ Ğ¡Ê±-ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    QString strdTime = time.toString("hh:mm:ss");//ï¿½ï¿½Ê½Îªï¿½ï¿½-ï¿½ï¿½-ï¿½ï¿½ Ğ¡Ê±-ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     ui.labelDate->setText(strdDate);
     ui.labelTime->setText(strdTime);
 }
 
 void Mainwindow::recQStr(QString str) {
-    //»ñÈ¡µ±Ç°µÄĞĞÊı
+    //ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     int row = p_listwidget->count();
     QListWidgetItem* item = new QListWidgetItem(p_listwidget);
     item->setSizeHint(QSize(0, 30));
-    //ÔÚµ±Ç°ĞĞÌí¼Óitem  checkbox
+    //ï¿½Úµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½item  checkbox
     QCheckBox* checkbox = new QCheckBox;
     item->setBackground(QBrush(QColor("#A0F4E7")));
     checkbox->setText(str);
@@ -230,15 +226,15 @@ void Mainwindow::recQStr(QString str) {
 }
 
 void Mainwindow::recMsg(QString time, QString content) {
-    // »ñÈ¡±í¸ñµ±Ç°µÄĞĞÊı
+    // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     int row = p_tableView->model()->rowCount();
     int insertRow = CalRow(time);
     QStandardItem* item1 = new QStandardItem(time);
     QStandardItem* item2 = new QStandardItem(content);
     item1->setTextAlignment(Qt::AlignCenter);
     item2->setTextAlignment(Qt::AlignCenter);
-    item1->setFont(QFont(QStringLiteral("Ë¼Ô´ºÚÌå CN BOLD"), 10));
-    item2->setFont(QFont(QStringLiteral("Ë¼Ô´ºÚÌå CN BOLD"), 10));
+    item1->setFont(QFont(QStringLiteral("Ë¼Ô´ï¿½ï¿½ï¿½ï¿½ CN BOLD"), 10));
+    item2->setFont(QFont(QStringLiteral("Ë¼Ô´ï¿½ï¿½ï¿½ï¿½ CN BOLD"), 10));
     item1->setForeground(QBrush(QColor("#FFFFFF")));
     item2->setForeground(QBrush(QColor("#FFFFFF")));
     item1->setBackground(QBrush(QColor("#A0F4E7")));
@@ -250,26 +246,26 @@ void Mainwindow::recMsg(QString time, QString content) {
     //p_model->setItem(insertRow, 0, item1);
     //p_model->setItem(insertRow, 1, item2);
 
-    // »ñÈ¡´Ë¿ÌÊ±¼ä
-    QDateTime currentTime_ = QDateTime::currentDateTime();//»ñÈ¡µ±Ç°ÈÕÆÚºÍÊ±¼ä
+    // ï¿½ï¿½È¡ï¿½Ë¿ï¿½Ê±ï¿½ï¿½
+    QDateTime currentTime_ = QDateTime::currentDateTime();//ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Úºï¿½Ê±ï¿½ï¿½
     QString strDate = currentTime_.toString("yyyy-MM-dd");
-    //QString strdTime = currentTime.toString("hh:mm:ss");//¸ñÊ½ÎªÄê-ÔÂ-ÈÕ Ğ¡Ê±-·ÖÖÓ-Ãë ĞÇÆÚ
+    //QString strdTime = currentTime.toString("hh:mm:ss");//ï¿½ï¿½Ê½Îªï¿½ï¿½-ï¿½ï¿½-ï¿½ï¿½ Ğ¡Ê±-ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     //QString strSecond = currentTime_.toString("ss");
-    qDebug() << QStringLiteral("µ±Ç°Ê±¼äÎª£º") << currentTime_;
+    qDebug() << QStringLiteral("ï¿½ï¿½Ç°Ê±ï¿½ï¿½Îªï¿½ï¿½") << currentTime_;
 
-    // Æ´½ÓÄÖÖÓÊ±¼ä
+    // Æ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
     QString strClockTime = QString("%1 %2:%3")
         .arg(strDate).arg(time).arg("00");
     QDateTime clockTime_ = QDateTime::fromString(strClockTime, "yyyy-MM-dd hh:mm:ss");
-    qDebug() << QStringLiteral("ÄÖÖÓÊ±¼äÎª£º") << clockTime_;
+    qDebug() << QStringLiteral("ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Îªï¿½ï¿½") << clockTime_;
 
 
-    // ¼ÆËãÊ±¼ä²î
-    int elapsed = currentTime_.msecsTo(clockTime_);     // µ¥Î»ÊÇºÁÃë
-    qDebug() << QStringLiteral("»¹Ê£Ê±¼ä£º") << elapsed << QStringLiteral("ºÁÃë");
+    // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½
+    int elapsed = currentTime_.msecsTo(clockTime_);     // ï¿½ï¿½Î»ï¿½Çºï¿½ï¿½ï¿½
+    qDebug() << QStringLiteral("ï¿½ï¿½Ê£Ê±ï¿½ä£º") << elapsed << QStringLiteral("ï¿½ï¿½ï¿½ï¿½");
 
-    // ¿ªÊ¼¼ÆÊ±
-    int timeId = startTimer(elapsed);              // startTimerµÄµ¥Î»ÊÇºÁÃë
+    // ï¿½ï¿½Ê¼ï¿½ï¿½Ê±
+    int timeId = startTimer(elapsed);              // startTimerï¿½Äµï¿½Î»ï¿½Çºï¿½ï¿½ï¿½
     ClockNode* clockNode = new ClockNode{ timeId, time, content,NULL };
     insertClock(insertRow, clockNode);
 }
@@ -281,8 +277,8 @@ void Mainwindow::recCloseCommand()
 }
 
 void Mainwindow::insertClock(int insertIndex, ClockNode* clockNode) {
-    ClockNode* p = p_head->next;          // ±éÀúÖ¸Õë     
-    ClockNode* q = p_head;               // Ö¸ÏòÉÏÒ»½ÚµãµÄÖ¸Õë
+    ClockNode* p = p_head->next;          // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½     
+    ClockNode* q = p_head;               // Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Úµï¿½ï¿½Ö¸ï¿½ï¿½
     int index = 0;
     while (p != NULL && index != insertIndex) {
         q = p;
@@ -294,8 +290,8 @@ void Mainwindow::insertClock(int insertIndex, ClockNode* clockNode) {
 }
 
 void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
-    ClockNode* p = p_head->next;          // ±éÀúÖ¸Õë     
-    ClockNode* q = p_head;               // Ö¸ÏòÉÏÒ»½ÚµãµÄÖ¸Õë
+    ClockNode* p = p_head->next;          // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½     
+    ClockNode* q = p_head;               // Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Úµï¿½ï¿½Ö¸ï¿½ï¿½
     while (p != NULL) {
         if (p->timerId == timerid) {
             time = p->time;
@@ -304,7 +300,7 @@ void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
             delete p;
             p = NULL;
 
-            if (q->next == NULL)         // ´ËÊ±ËµÃ÷É¾³ıµÄÊÇ×îºóÒ»¸ö½Úµã£¬ĞèÒª½«p_clockListÖØĞÂÖ¸ÏòÍ·½Úµã
+            if (q->next == NULL)         // ï¿½ï¿½Ê±Ëµï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Úµã£¬ï¿½ï¿½Òªï¿½ï¿½p_clockListï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Í·ï¿½Úµï¿½
                 p_clockList = p_head;
             return;
         }
@@ -314,8 +310,8 @@ void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
 }
 
 void Mainwindow::removeClock(int index) {
-    ClockNode* p = p_head->next;          // ±éÀúÖ¸Õë     
-    ClockNode* q = p_head;               // Ö¸ÏòÉÏÒ»½ÚµãµÄÖ¸Õë
+    ClockNode* p = p_head->next;          // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½     
+    ClockNode* q = p_head;               // Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Úµï¿½ï¿½Ö¸ï¿½ï¿½
     int count=0;
     while (p != NULL && index!=count) {
         count++;
@@ -325,27 +321,27 @@ void Mainwindow::removeClock(int index) {
     if (p == NULL)
         return;
     q->next = p->next;
-    killTimer(p->timerId);  // ¹Øµô°ó¶¨µÄ¼ÆÊ±Æ÷
+    killTimer(p->timerId);  // ï¿½Øµï¿½ï¿½ó¶¨µÄ¼ï¿½Ê±ï¿½ï¿½
     delete p;
     p = NULL;
 }
 
 void Mainwindow::clearClock()
 {
-    ClockNode* p = p_head->next;          // ±éÀúÖ¸Õë     
-    ClockNode* q = p_head;               // Ö¸ÏòÉÏÒ»½ÚµãµÄÖ¸Õë
+    ClockNode* p = p_head->next;          // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½     
+    ClockNode* q = p_head;               // Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Úµï¿½ï¿½Ö¸ï¿½ï¿½
     while (p!=NULL){
-        q = p->next; //q±äÁ¿´æ·ÅpµÄÏÂÒ»Ö¸ÕëÓò
-        killTimer(p->timerId);  // ¹Øµô°ó¶¨µÄ¼ÆÊ±Æ÷
-        delete p; //ÊÍ·Åp
-        p = q; //½«q±äÁ¿ÖĞµÄÄÚÈİ·µ»¹¸øp
+        q = p->next; //qï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ï¿½ï¿½Ò»Ö¸ï¿½ï¿½ï¿½ï¿½
+        killTimer(p->timerId);  // ï¿½Øµï¿½ï¿½ó¶¨µÄ¼ï¿½Ê±ï¿½ï¿½
+        delete p; //ï¿½Í·ï¿½p
+        p = q; //ï¿½ï¿½qï¿½ï¿½ï¿½ï¿½ï¿½Ğµï¿½ï¿½ï¿½ï¿½İ·ï¿½ï¿½ï¿½ï¿½ï¿½p
     }
     p_head->next = NULL;
 }
 
 void Mainwindow::closeEvent(QCloseEvent* event) {
-    //´°¿Ú¹Ø±ÕÊ±Ñ¯ÎÊÊÇ·ñÍË³ö
-    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("È·ÈÏ"), QStringLiteral("ÍË³ö³ÌĞò½«»áÇå¿ÕËùÓĞÄÚÈİ£¬È·¶¨ÒªÍË³ö±¾³ÌĞòÂğ£¿"),
+    //ï¿½ï¿½ï¿½Ú¹Ø±ï¿½Ê±Ñ¯ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ë³ï¿½
+    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("È·ï¿½ï¿½"), QStringLiteral("ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ò½«»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ£ï¿½È·ï¿½ï¿½Òªï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Yes);
 
@@ -360,15 +356,15 @@ void Mainwindow::closeEvent(QCloseEvent* event) {
 
 void Mainwindow::hideEvent(QHideEvent* event)
 {
-    if (isClosed){              // ×èÖ¹¹Ø±Õ´°¿ÚÊ±ÈÔÌáÊ¾Òş²Øµ½ÍĞÅÌ
+    if (isClosed){              // ï¿½ï¿½Ö¹ï¿½Ø±Õ´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
         event->accept();
         return;
     }
     if (m_tray->isVisible())
     {
-        qDebug() << QStringLiteral("Òş²Øµ½ÍĞÅÌ");
-        m_tray->showMessage("RemindMe", QStringLiteral("Òş²Øµ½ÍĞÅÌÍ¼±êÁË")); //ÌáÊ¾ÓÃ»§Òş²Øµ½ÁËÍĞÅÌ
-        event->ignore(); //ºöÂÔÊÂ¼ş
+        qDebug() << QStringLiteral("ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½");
+        m_tray->showMessage("RemindMe", QStringLiteral("ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½")); //ï¿½ï¿½Ê¾ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        event->ignore(); //ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
     }
     else
         event->accept();
@@ -380,25 +376,25 @@ void Mainwindow::timerEvent(QTimerEvent* event) {
     QString content;
     qDebug() << timerid;
 
-    // ´ÓÄÖÖÓÁ´±íÖĞÒÆ³ı¸ÃÏî²¢·µ»ØÊ±ÖÓÓëÄÚÈİ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½î²¢ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     removeClock(timerid, time, content);
 
-    // ±í¸ñÖĞÉ¾³ıÏàÓ¦ÄÚÈİ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½
 
-    // ÒôÀÖ
+    // ï¿½ï¿½ï¿½ï¿½
     if(soundSwitch)
          m_soundEffect->play();
 
-    // µ¯´°
+    // ï¿½ï¿½ï¿½ï¿½
     this->showNormal();
     MyDialog* remindPop = new MyDialog(this);
     remindPop->SetLabelContent(content);
     remindPop->SetLabelIcon(":/res/windowIcon.png");
-    remindPop->setAttribute(Qt::WA_DeleteOnClose);		// ÉèÖÃÍË³ö×Ô¶¯Ïú»Ù
+    remindPop->setAttribute(Qt::WA_DeleteOnClose);		// ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
     remindPop->show();
     connect(remindPop, &MyDialog::signalMyDialogBtnCloseClicked, this, &Mainwindow::recCloseCommand);
 
-    // È¡Ïûµô´Ë¼ÆÊ±Æ÷
+    // È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ë¼ï¿½Ê±ï¿½ï¿½
     killTimer(timerid);
 }
 
@@ -418,8 +414,8 @@ void Mainwindow::onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason
 
 int Mainwindow::CalRow(QString newTime) {
     QDateTime _newTime = QDateTime::fromString(newTime, "hh:mm");
-    ClockNode* p = p_head->next;          // ±éÀúÖ¸Õë     
-    ClockNode* q = p_head;               // Ö¸ÏòÉÏÒ»½ÚµãµÄÖ¸Õë
+    ClockNode* p = p_head->next;          // ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½     
+    ClockNode* q = p_head;               // Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Úµï¿½ï¿½Ö¸ï¿½ï¿½
     int index = 0;
     while (p != NULL) {
         QDateTime _tmpTime = QDateTime::fromString(p->time, "hh:mm");
@@ -435,57 +431,123 @@ int Mainwindow::CalRow(QString newTime) {
 
 void Mainwindow::ShowSettings()
 {
+    int h = height();
+    int panelH = 270;
+    int panelY = (h - panelH) / 2;
+
     ui.btnShowSettings->hide();
     ui.frameSettings->show();
     QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry");
-    animation->setDuration(500);       // ÉèÖÃ¶¯»­Ê±¼ä
-    animation->setStartValue(QRect(QPoint(0,270),QSize(0, 270)));
-    animation->setEndValue(QRect(QPoint(0, 270), QSize(150, 270)));
-
-    animation->start();
-    //delete animation;
+    animation->setDuration(500);
+    animation->setStartValue(QRect(QPoint(0, panelY), QSize(0, panelH)));
+    animation->setEndValue(QRect(QPoint(0, panelY), QSize(150, panelH)));
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void Mainwindow::HideSettings() {
-    
+    int h = height();
+    int panelH = 270;
+    int panelY = (h - panelH) / 2;
+
     QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry");
-    animation->setDuration(100);       // ÉèÖÃ¶¯»­Ê±¼ä
-    animation->setStartValue(QRect(QPoint(0, 270), QSize(150, 270)));
-    animation->setEndValue(QRect(QPoint(0, 270), QSize(0, 270)));
-    // ĞèÒªÉèÖÃ×Ô¶¯Ïú»Ù
+    animation->setDuration(100);
+    animation->setStartValue(QRect(QPoint(0, panelY), QSize(150, panelH)));
+    animation->setEndValue(QRect(QPoint(0, panelY), QSize(0, panelH)));
     animation->start(QAbstractAnimation::DeleteWhenStopped);
     ui.btnShowSettings->show();
-    
 }
 
 void Mainwindow::ClearAll()
 {
-    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("È·ÈÏ"), QStringLiteral("ÄúÈ·¶¨ÒªÇå¿ÕËùÓĞÈÕ³ÌÓëÄÖÖÓÄÚÈİÂğ£¿"),
+    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("È·ï¿½ï¿½"), QStringLiteral("ï¿½ï¿½È·ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Yes);
 
     if (result == QMessageBox::Yes) {
-        // 1.Çå¿ÕÈÕ³Ì
+        // 1.ï¿½ï¿½ï¿½ï¿½Õ³ï¿½
         p_listwidget->clear();
-        qDebug() << QStringLiteral("ÈÕ³ÌÒÑÇå¿Õ");
-        // 2.Çå¿ÕÄÖÖÓÁ´±í
+        qDebug() << QStringLiteral("ï¿½Õ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+        // 2.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         clearClock();
-        qDebug() << QStringLiteral("ÄÖÖÓÒÑÇå¿Õ");
-        // 3.Çå¿ÕÄÖÖÓÏÔÊ¾
-        p_tableView->model()->removeRows(0, p_tableView->model()->rowCount()); //É¾³ıËùÓĞĞĞ;
-        qDebug() << QStringLiteral("ÄÖÖÓÏÔÊ¾ÒÑÇå¿Õ");
+        qDebug() << QStringLiteral("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+        // 3.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
+        p_tableView->model()->removeRows(0, p_tableView->model()->rowCount()); //É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½;
+        qDebug() << QStringLiteral("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½");
     }
 }
 
 void Mainwindow::onBtnSwitchClicked() {
     if (soundSwitch) {
         soundSwitch = false;
-        QIcon icon(":/res/switch_off.png");  // ´Ó×ÊÔ´ÎÄ¼ş¼ÓÔØÍ¼±ê£¬×¢ÒâÌæ»»ÕıÈ·µÄÂ·¾¶
+        QIcon icon(":/res/switch_off.png");  // ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ê£¬×¢ï¿½ï¿½ï¿½æ»»ï¿½ï¿½È·ï¿½ï¿½Â·ï¿½ï¿½
         ui.btnSwitch->setIcon(icon);
     }
     else {
         soundSwitch = true;
-        QIcon icon(":/res/switch_on.png");  // ´Ó×ÊÔ´ÎÄ¼ş¼ÓÔØÍ¼±ê£¬×¢ÒâÌæ»»ÕıÈ·µÄÂ·¾¶
+        QIcon icon(":/res/switch_on.png");  // ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ê£¬×¢ï¿½ï¿½ï¿½æ»»ï¿½ï¿½È·ï¿½ï¿½Â·ï¿½ï¿½
         ui.btnSwitch->setIcon(icon);
     }
+}
+
+// ---------------------------------------------------------------------------
+// å“åº”å¼å¸ƒå±€ï¼šæ‰€æœ‰ç»å¯¹å®šä½æ§ä»¶éšçª—å£å°ºå¯¸é‡æ–°è®¡ç®—ä½ç½®ä¸å¤§å°
+// ---------------------------------------------------------------------------
+void Mainwindow::repositionWidgets()
+{
+    int W = width();
+    int H = height();
+
+    // å¸ƒå±€å¸¸é‡
+    const int headerH   = 20;   // æ ‡é¢˜æ ‡ç­¾é«˜åº¦
+    const int headerY   = 80;   // æ ‡é¢˜è¡Œ Y
+    const int listTop   = 110;  // åˆ—è¡¨/è¡¨æ ¼èµ·å§‹ Y
+    const int btnBarH   = 60;   // åº•éƒ¨æŒ‰é’®æ é«˜åº¦
+    const int btnBarY   = H - btnBarH;
+    const int listH     = btnBarY - listTop - 10;
+
+    // åˆ—å®½ï¼šå·¦ä¾§æ—¥ç¨‹åŒº / ä¸­é—´æ—¶é’ŸåŒº / å³ä¾§é—¹é’ŸåŒº å„å  1/4 å®½åº¦
+    const int colW      = W / 4;
+    const int leftX     = colW / 2 - 100;           // æ—¥ç¨‹åˆ—è¡¨å·¦è¾¹è·ï¼ˆåˆ—ä¸­å¿ƒ - åŠå®½ï¼‰
+    const int rightX    = W - colW / 2 - 100;       // é—¹é’Ÿè¡¨æ ¼å·¦è¾¹è·
+
+    // â€” æ—¥ç¨‹æ ‡é¢˜æ ‡ç­¾
+    ui.label->setGeometry(leftX, headerY, 200, headerH);
+
+    // â€” æ—¥ç¨‹åˆ—è¡¨ï¼ˆä»£ç åˆ›å»ºï¼‰
+    if (p_listwidget)
+        p_listwidget->setGeometry(leftX, listTop, 200, listH);
+
+    // â€” æ—¶é’ŸåŒºï¼ˆå±…ä¸­ï¼‰
+    int clockX = (W - 200) / 2;
+    ui.labelDate->setGeometry(clockX, listTop, 200, 41);
+    ui.labelTime->setGeometry(clockX, listTop + 50, 200, 51);
+    ui.labelImage->setGeometry(clockX - 40, listTop + 200, 281, 191);
+
+    // â€” é—¹é’Ÿè¡¨å¤´
+    ui.label_2->setGeometry(rightX, headerY, 60, headerH);
+    ui.label_3->setGeometry(rightX + 60, headerY, 140, headerH);
+
+    // â€” é—¹é’Ÿè¡¨æ ¼ï¼ˆä»£ç åˆ›å»ºï¼‰
+    if (p_tableView)
+        p_tableView->setGeometry(rightX, listTop, 200, listH);
+
+    // â€” åº•éƒ¨æŒ‰é’®æ 
+    ui.widget->setGeometry(0, btnBarY, W, btnBarH);
+
+    // â€” å±•å¼€æŒ‰é’®ï¼ˆå·¦ä¾§è¾¹ç¼˜ï¼Œç«–å‘å±…ä¸­ï¼‰
+    const int panelH = 270;
+    int btnShowY = (H - 80) / 2;
+    ui.btnShowSettings->setGeometry(0, btnShowY, 10, 80);
+
+    // â€” è®¾ç½®é¢æ¿ï¼ˆè‹¥å±•å¼€çŠ¶æ€ï¼ŒåŒæ­¥æ›´æ–°ä½ç½®ï¼‰
+    if (!ui.frameSettings->isHidden()) {
+        int panelY = (H - panelH) / 2;
+        ui.frameSettings->setGeometry(0, panelY, 150, panelH);
+    }
+}
+
+void Mainwindow::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    repositionWidgets();
 }

@@ -13,38 +13,38 @@
 #include "Mainwindow.h"
 int main(int argc, char *argv[])
 {
-    // ¼ì²âÄÚ´æÐ¹Â©
+    // ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¹Â©
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    // ½øÈë³ÌÐò
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     QApplication a(argc, argv);
     qDebug() << "QApplication start!";
 
-    ///*Ê±¼äÓÐÐ§ÆÚÎª3Ìì£¬ÈýÌìºó²»¿ÉÓÃ£¡*/
-    //QDateTime baseTime = QDateTime::fromString("2023-10-17 00:00:00", "yyyy-MM-dd hh:mm:ss");       // ¹æ¶¨Ò»¸ö³õÊ¼»¯»ù×¼Ê±¼ä
-    //QDateTime currentTime = QDateTime::currentDateTime();                                           //»ñÈ¡ÏµÍ³µ±Ç°µÄÊ±¼ä
-    //int startTime = baseTime.toTime_t();        //½«µ±Ç°Ê±¼ä×ªÎªÊ±¼ä´Á
-    //int endTime = currentTime.toTime_t();       //½«µ±Ç°Ê±¼ä×ªÎªÊ±¼ä´Á
-    //if (endTime - startTime > 86400*15) {
-    //    QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
-    //    return -1;
-    //}
+    /*Ê±ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½Îª3ï¿½ì£¬ï¿½ï¿½ï¿½ï¿½ó²»¿ï¿½ï¿½Ã£ï¿½*/
+    QDateTime baseTime = QDateTime::fromString("2026-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss");       // ï¿½æ¶¨Ò»ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½×¼Ê±ï¿½ï¿½
+    QDateTime currentTime = QDateTime::currentDateTime();                                           //ï¿½ï¿½È¡ÏµÍ³ï¿½ï¿½Ç°ï¿½ï¿½Ê±ï¿½ï¿½
+    int startTime = baseTime.toTime_t();        //ï¿½ï¿½ï¿½ï¿½Ç°Ê±ï¿½ï¿½×ªÎªÊ±ï¿½ï¿½ï¿½
+    int endTime = currentTime.toTime_t();       //ï¿½ï¿½ï¿½ï¿½Ç°Ê±ï¿½ï¿½×ªÎªÊ±ï¿½ï¿½ï¿½
+    if (endTime - startTime > 86400*180) {
+        QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
+        return -1;
+    }
 
 
-    // ÉèÖÃÒ»¸ö»¥³âÁ¿
+    // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     QMutex mutex;
-    mutex.lock();// ¿ªÆôÁÙ½çÇø
-    // ÔÚÁÙ½çÇøÄÚ´´½¨SingleAppµÄ¹²ÏíÄÚ´æ¿é
+    mutex.lock();// ï¿½ï¿½ï¿½ï¿½ï¿½Ù½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½Ù½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½SingleAppï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½
     static QSharedMemory* shareMem = new QSharedMemory("SingleApp");
     if (!shareMem->create(1)) {
-        mutex.unlock();// ¹Ø±ÕÁÙ½çÇø
+        mutex.unlock();// ï¿½Ø±ï¿½ï¿½Ù½ï¿½ï¿½ï¿½
         QMessageBox::information(0, "Tip", "RemindMe has been running!");
-        return -1;  // ´´½¨Ê§°Ü£¬ËµÃ÷ÒÑÓÐÒ»¸ö³ÌÐòÔÚÔËÐÐ£¬ÍË³öµ±Ç°³ÌÐò
+        return -1;  // ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½Ë³ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
     }
-    mutex.unlock();// ¹Ø±ÕÁÙ½çÇø
+    mutex.unlock();// ï¿½Ø±ï¿½ï¿½Ù½ï¿½ï¿½ï¿½
 
     Mainwindow w;
-    w.show(); 
+    w.showMaximized();
 
     return a.exec(); 
 
@@ -53,22 +53,22 @@ int main(int argc, char *argv[])
 }   
 
 
-// ²Î¿¼×ÊÁÏ
+// ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½
 //https://blog.csdn.net/lion_cxq/article/details/115101356
 //https://blog.csdn.net/CXYYL/article/details/129275039
 
-//https://blog.csdn.net/weixin_42692504/article/details/108065692 ×îÐ¡»¯µ½ÍÐÅÌ
+//https://blog.csdn.net/weixin_42692504/article/details/108065692 ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-// ÏµÍ³ÍÐÅÌ
+// ÏµÍ³ï¿½ï¿½ï¿½ï¿½
 //trayIcon = new QSystemTrayIcon();
 //trayIcon->setIcon(QIcon(":/logo.ico"));
 //
 //QMenu* menu = new QMenu();
-//QAction* action = menu->addAction("ÍË³ö");
+//QAction* action = menu->addAction("ï¿½Ë³ï¿½");
 //connect(action, &QAction::triggered, this, &Widget::systemExit);
 //
 //trayIcon->setContextMenu(menu);
 //trayIcon->show();
 
-// ±í¸ñQTableView
+// ï¿½ï¿½ï¿½ï¿½QTableView
 //https://blog.csdn.net/u010031316/article/details/116886567

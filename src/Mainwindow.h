@@ -7,6 +7,7 @@
 #include <QStandardItemModel>
 #include <QSoundEffect>
 #include <QSystemTrayIcon>
+#include <QResizeEvent>
 #include "ui_Mainwindow.h"
 
 typedef struct ClockNode {
@@ -54,6 +55,8 @@ private:
 	void timerEvent(QTimerEvent* event);
 	void closeEvent(QCloseEvent* event);
 	void hideEvent(QHideEvent* event);
+	void resizeEvent(QResizeEvent* event);
+	void repositionWidgets();
 
 private:
 	Ui::MainwindowClass ui;
@@ -63,12 +66,12 @@ private:
 	QStandardItemModel* p_model;
 	QTimer* p_timeUpdate;
 	QVector<ClockNode> m_clockVec;
-	ClockList p_clockList;				// ´æ·ÅÄÖÖÓ½ÚµãµÄÁ´±í
-	ClockNode* p_head;					// Í·Ö¸Õë
+	ClockList p_clockList;				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	ClockNode* p_head;					// Í·Ö¸ï¿½ï¿½
 
-	bool soundSwitch = true;			// ÒôÀÖ¿ª¹Ø
-	QSoundEffect* m_soundEffect;		// ÒôÐ§²¥·Å
-	QSystemTrayIcon* m_tray = nullptr;	// ÏµÍ³ÍÐÅÌ
+	bool soundSwitch = true;			// ï¿½ï¿½ï¿½Ö¿ï¿½ï¿½ï¿½
+	QSoundEffect* m_soundEffect;		// ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½
+	QSystemTrayIcon* m_tray = nullptr;	// ÏµÍ³ï¿½ï¿½ï¿½ï¿½
 };
 
 #endif //MAINWINDOW_H

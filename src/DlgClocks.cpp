@@ -7,8 +7,8 @@ DlgClocks::DlgClocks(QWidget *parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
-	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // ÎÞ±ß¿òÉèÖÃ
-	setAttribute(Qt::WA_TranslucentBackground);// ±³¾°Í¸Ã÷ÉèÖÃ
+	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // ï¿½Þ±ß¿ï¿½ï¿½ï¿½ï¿½ï¿½
+	setAttribute(Qt::WA_TranslucentBackground);// ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	connect(ui.btnConfirm, &QPushButton::clicked, this, &DlgClocks::OnBtnConfirm);
 	connect(ui.btnCancel, &QPushButton::clicked, this, &DlgClocks::OnBtnCancel);
 }
@@ -20,32 +20,34 @@ void DlgClocks::OnBtnConfirm() {
 	QString timeStr = ui.lineEditTime->text();
 	QString contentStr = ui.lineEditContent->text();
 	if (timeStr.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    Ê±¼ä²»ÔÊÐíÎª¿Õ    "));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    Ê±ï¿½ä²»ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½    "));
 		return;
 	}
 	if (contentStr.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    ÄÚÈÝ²»ÔÊÐíÎª¿Õ    "));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½    "));
 		return;
 	}
-	// ·ÀÖ¹ÊäÈëÖÐÎÄÏÂµÄ·ÖºÅ
-	timeStr = timeStr.replace(QStringLiteral("£º"), ":");
+	// ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÂµÄ·Öºï¿½
+	timeStr = timeStr.replace(QStringLiteral("ï¿½ï¿½"), ":");
 
-	// ¼ì²éÊ±¼ä¸ñÊ½ÊÇ·ñÎªhh:mm
-	QDateTime date = QDateTime::fromString(timeStr, "hh:mm");
+	// ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ê½ï¿½Ç·ï¿½Îªhh:mm
+	QDateTime date = QDateTime::fromString(timeStr, "h:mm");
 	if (!date.isValid()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    Ê±¼ä¸ñÊ½²»ÕýÈ·    "));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    Ê±ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½È·    "));
 		return;
 	}
-	QDateTime time = QDateTime::currentDateTime();//»ñÈ¡µ±Ç°ÈÕÆÚºÍÊ±¼ä
-	QString strdTime = time.toString("hh:mm");//¸ñÊ½ÎªÄê-ÔÂ-ÈÕ Ð¡Ê±-·ÖÖÓ-Ãë ÐÇÆÚ
-	time = QDateTime::fromString(strdTime, "hh:mm");
+	QDateTime time = QDateTime::currentDateTime();//ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Úºï¿½Ê±ï¿½ï¿½
+	QString strdTime = time.toString("h:mm");
+	time = QDateTime::fromString(strdTime, "h:mm");
 	if (date < time) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    ÇëÊäÈëÍíÓÚ´Ë¿ÌµÄÊ±¼ä    "));
+		QMessageBox::warning(this, "Warning", QStringLiteral("    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´Ë¿Ìµï¿½Ê±ï¿½ï¿½    "));
 		return;
 	}
 
 
 	
+	// å½’ä¸€åŒ–ä¸º hh:mmï¼ˆè¡¥é›¶ï¼‰ï¼Œä¿è¯ä¸»çª—å£ CalRow/recMsg è§£æžä¸€è‡´
+	timeStr = QDateTime::fromString(timeStr, "h:mm").toString("hh:mm");
 	emit sendMsg(timeStr, contentStr);
 	this->close();
 }
@@ -59,5 +61,5 @@ void DlgClocks::closeEvent(QCloseEvent* e) {
 }
 void DlgClocks::showEvent(QShowEvent* event) {
 	activateWindow();
-	ui.lineEditTime->setFocus(); //ÉèÖÃÄ¬ÈÏ½¹µã
+	ui.lineEditTime->setFocus(); //ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï½ï¿½ï¿½ï¿½
 }
