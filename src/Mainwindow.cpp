@@ -400,6 +400,7 @@ void Mainwindow::ShowSettings()
     int panelY = (height() - PANEL_H) / 2;
     ui.btnShowSettings->hide();
     ui.frameSettings->show();
+    ui.frameSettings->raise();
     QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry", this);
     animation->setDuration(500);
     animation->setStartValue(QRect(QPoint(0, panelY), QSize(0, PANEL_H)));
@@ -599,6 +600,7 @@ void Mainwindow::repositionWidgets()
     if (!ui.frameSettings->isHidden()) {
         int panelY = (H - PANEL_H) / 2;
         ui.frameSettings->setGeometry(0, panelY, 150, PANEL_H);
+        ui.frameSettings->raise();
     }
 }
 
