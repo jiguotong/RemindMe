@@ -10,6 +10,7 @@
 #include <QPropertyAnimation>
 #include <QMovie>
 #include <QFile>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -474,11 +475,14 @@ void Mainwindow::saveData()
     root["clocks"] = clocks;
 
     QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir().mkpath(dir); // create directory if it doesn't exist
     QFile file(dir + "/remindme_data.json");
-    if (file.open(QIODevice::WriteOnly)) {
-        file.write(QJsonDocument(root).toJson());
-        file.close();
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::warning(this, "Save Failed", "Cannot write to:\n" + dir + "/remindme_data.json");
+        return;
     }
+    file.write(QJsonDocument(root).toJson());
+    file.close();
 }
 
 void Mainwindow::loadData()
