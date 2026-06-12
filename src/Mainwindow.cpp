@@ -2,154 +2,155 @@
 #include <QDebug>
 #include <QCheckBox>
 #include <QMessageBox>
-#include <QTextLine>
 #include <QHeaderView>
 #include <QStandardItemModel>
 #include <QTimer>
 #include <QDateTime>
+#include <QTime>
 #include <QPropertyAnimation>
 #include <QMovie>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QStandardPaths>
 #include "DlgTasks.h"
 #include "DlgClocks.h"
 #include "MyDialog.h"
 
 Mainwindow::Mainwindow(QWidget *parent)
-	: QMainWindow(parent){
-	ui.setupUi(this);
-
-    
-
+    : QMainWindow(parent)
+{
+    ui.setupUi(this);
     initWindow();
     initCheckBox();
-    initConnect(); 
+    initConnect();
     initTable();
+    loadData();
 }
 
-Mainwindow::~Mainwindow(){}
+Mainwindow::~Mainwindow()
+{
+    for (auto& c : m_clockVec) killTimer(c.timerId);
+}
 
-void Mainwindow::initWindow() {
-
-    // ����
+void Mainwindow::initWindow()
+{
     setWindowIcon(QIcon(":/res/windowIcon.png"));
     setWindowTitle(QStringLiteral("������ȫ���Ը�����"));
-    // �ؼ�
+
     ui.btnAdd->setShortcut(tr("Ctrl+Q"));
     ui.btnDel->setShortcut(tr("Ctrl+W"));
     ui.btnAddClock->setShortcut(tr("Ctrl+E"));
     ui.btnDelClock->setShortcut(tr("Ctrl+R"));
 
-    // ��ʼ����̬ͼ
-    QMovie *movie = new QMovie(":/res/panda.gif");
+    QMovie *movie = new QMovie(":/res/panda.gif", QByteArray(), this);
     ui.labelImage->setMovie(movie);
     movie->start();
     ui.labelImage->show();
 
-    // ��ʼ����������
     m_soundEffect = new QSoundEffect(this);
-    //m_soundEffect->setSource(QUrl::fromLocalFile("C:\\Users\\Administrator\\Desktop\\RemindMe\\src\\res\\Alarm01.wav"));
     m_soundEffect->setSource(QUrl::fromLocalFile(":/res/Alarm01.wav"));
     m_soundEffect->setLoopCount(QSoundEffect::Infinite);
     m_soundEffect->setVolume(0.25f);
 
-    // ����������ʼ��������ͷ�ڵ�
-    ClockNode* headNode= new ClockNode;
-    p_head = headNode;
-    p_clockList = headNode;
-
-    // ϵͳ����
     m_tray = new QSystemTrayIcon(this);
     m_tray->setIcon(QIcon(":/res/windowIcon.png"));
     m_tray->setToolTip(QStringLiteral("RemindMe"));
     m_tray->show();
 
-    // ���ô�������
+    // Tray right-click menu
+    QMenu* trayMenu = new QMenu(this);
+    QAction* actionOpen = trayMenu->addAction("Open RemindMe");
+    m_actionMute = trayMenu->addAction("Mute");
+    QAction* actionQuit = trayMenu->addAction("Quit");
+    m_tray->setContextMenu(trayMenu);
+    connect(actionOpen, &QAction::triggered, this, &QWidget::showNormal);
+    connect(m_actionMute, &QAction::triggered, this, [this]() {
+        soundSwitch = !soundSwitch;
+        m_actionMute->setText(soundSwitch ? "Mute" : "Unmute");
+        QIcon icon(soundSwitch ? ":/res/switch_on.png" : ":/res/switch_off.png");
+        ui.btnSwitch->setIcon(icon);
+    });
+    connect(actionQuit, &QAction::triggered, this, [this]() { isClosed = true; close(); });
+
     ui.frameSettings->hide();
-    // ����ʵʱˢ��ʱ��Ķ�ʱ��
+
     p_timeUpdate = new QTimer(this);
     p_timeUpdate->start(1000);
 }
 
-void Mainwindow::initConnect() {
-    connect(ui.btnAdd, &QPushButton::clicked, this, &Mainwindow::onBtnAddTaskClicked);
-    connect(ui.btnDel, &QPushButton::clicked, this, &Mainwindow::onBtnDelTaskClicked);
+void Mainwindow::initConnect()
+{
+    connect(ui.btnAdd,      &QPushButton::clicked, this, &Mainwindow::onBtnAddTaskClicked);
+    connect(ui.btnDel,      &QPushButton::clicked, this, &Mainwindow::onBtnDelTaskClicked);
     connect(ui.btnAddClock, &QPushButton::clicked, this, &Mainwindow::onBtnAddClockClicked);
     connect(ui.btnDelClock, &QPushButton::clicked, this, &Mainwindow::onBtnDelClockClicked);
-    connect(p_timeUpdate, &QTimer::timeout, this, &Mainwindow::slotTimerUpdate);
+    connect(p_timeUpdate,   &QTimer::timeout,      this, &Mainwindow::slotTimerUpdate);
     connect(m_tray, &QSystemTrayIcon::activated, this, &Mainwindow::onActivatedSysTrayIcon);
-    connect(ui.btnClear, &QPushButton::clicked, this, &Mainwindow::ClearAll);
-    connect(ui.btnSwitch, &QPushButton::clicked, this, &Mainwindow::onBtnSwitchClicked);
-    // ����ר��
+    connect(ui.btnClear,    &QPushButton::clicked, this, &Mainwindow::ClearAll);
+    connect(ui.btnSwitch,   &QPushButton::clicked, this, &Mainwindow::onBtnSwitchClicked);
     connect(ui.btnShowSettings, &QPushButton::clicked, this, &Mainwindow::ShowSettings);
     connect(ui.btnHideSettings, &QPushButton::clicked, this, &Mainwindow::HideSettings);
+
+    // Always-on-top toggle
+    connect(ui.btnAlwaysOnTop, &QPushButton::clicked, this, [this]() {
+        m_alwaysOnTop = !m_alwaysOnTop;
+        Qt::WindowFlags flags = windowFlags();
+        if (m_alwaysOnTop) flags |= Qt::WindowStaysOnTopHint;
+        else               flags &= ~Qt::WindowStaysOnTopHint;
+        setWindowFlags(flags);
+        show();
+        ui.btnAlwaysOnTop->setText(m_alwaysOnTop ? "On Top: ON" : "Always On Top");
+    });
+
+    // Opacity slider
+    connect(ui.sliderOpacity, &QSlider::valueChanged, this, [this](int v) {
+        setWindowOpacity(v / 100.0);
+    });
 }
 
-void Mainwindow::initCheckBox(){
+void Mainwindow::initCheckBox()
+{
     p_listwidget = new QListWidget(this);
     p_listwidget->setFrameShape(QFrame::NoFrame);
 }
 
-void Mainwindow::initTable() {
-    /* ����������ͼ */
+void Mainwindow::initTable()
+{
     p_tableView = new QTableView(this);
-
-    /* 尺寸与位置由 repositionWidgets() 在 resizeEvent 中统一设置 */
     p_tableView->setFrameShape(QFrame::NoFrame);
-    //p_tableView->setStyleSheet("background-color:transparent");                                       
-    p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);                // ����Ϊ���ɱ༭
-    p_tableView->setSelectionMode(QAbstractItemView::NoSelection);                  // ����Ϊ����ѡ��
-
+    p_tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    p_tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    p_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     p_tableView->verticalHeader()->hide();
     p_tableView->horizontalHeader()->hide();
-    p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    // ����Ӧ�����У����������ռ�
-    
+    p_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-
-    /*p_tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
-qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
-color: white;}");*/
-    /*p_tableView->verticalHeader()->setStyleSheet("QHeaderView::section {background-color:  \
-qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220),stop:1 rgba(20,196,188, 230));\
-color: white;}");*/
-
-    // ��������ģ�� */
-    p_model = new QStandardItemModel();
-    
-    // ���ñ��������(��������ΪQStringList����)
+    p_model = new QStandardItemModel(this);
     p_model->setHorizontalHeaderLabels({ "Time", "Content" });
-
-    ///* ���ع�10�����ݣ���ÿ����6������ */
-    //for (int i = 0; i < 10; i++) {
-    //    /* ���ص�һ��(ID)���� */
-    //    model->setItem(i, 0, new QStandardItem(QString("100%1").arg(i)));
-    //    /* ���صڶ���(User Name)���� */
-    //    model->setItem(i, 1, new QStandardItem(QString("User%1").arg(i)));
-    //}
-
-    /* ���ñ�����ͼ���� */
     p_tableView->setModel(p_model);
-
-    p_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);//�Ե�0�е������ù̶�����
-    p_tableView->setColumnWidth(0, 60);       //���õ�1�п�100
-
-    /* ��ʾ */
+    p_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    p_tableView->setColumnWidth(0, 60);
     p_tableView->show();
-    // 初始布局（窗口尺寸在 show() 后才确定，resizeEvent 会二次触发）
+
+    // Keyboard delete shortcuts (registered after widgets are created)
+    QShortcut* scDelTask = new QShortcut(QKeySequence(Qt::Key_Delete), p_listwidget);
+    connect(scDelTask, &QShortcut::activated, this, &Mainwindow::onBtnDelTaskClicked);
+    QShortcut* scDelClock = new QShortcut(QKeySequence(Qt::Key_Delete), p_tableView);
+    connect(scDelClock, &QShortcut::activated, this, &Mainwindow::onBtnDelClockClicked);
+
     repositionWidgets();
 }
 
 void Mainwindow::checkboxStateChanged(int)
 {
     QStringList itemList;
-    //������ǰ��listwidget
-    for (int i = 0; i < p_listwidget->count(); i++){
+    for (int i = 0; i < p_listwidget->count(); i++) {
         QListWidgetItem* item = p_listwidget->item(i);
-        //��QWidget ת��ΪQCheckBox  ��ȡ��i��item �Ŀؼ�
         QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
         if (checkbox->isChecked())
-        {
-            QString checkboxStr = checkbox->text();
-            itemList.append(checkboxStr);
-        }
+            itemList.append(checkbox->text());
     }
     qDebug() << itemList;
 }
@@ -158,76 +159,78 @@ void Mainwindow::onBtnAddTaskClicked()
 {
     DlgTasks* dlgTask = new DlgTasks(this);
     connect(dlgTask, &DlgTasks::SendText, this, &Mainwindow::recQStr);
-    //dlgTask->show();
-
     dlgTask->exec();
-
-    //������ͼ
     delete dlgTask;
-    dlgTask = NULL; 
 }
 
 void Mainwindow::onBtnDelTaskClicked()
 {
-    //��ȡ��ǰѡ����
     int row = p_listwidget->currentRow();
     if (row < 0) {
+        QMessageBox::information(this, "Tip", "Please select and check an item to delete.");
         return;
     }
     QListWidgetItem* item = p_listwidget->item(row);
-    //��QWidget ת��ΪQCheckBox  ��ȡ��row��item �Ŀؼ�
     QCheckBox* checkbox = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
     if (checkbox->isChecked()) {
         p_listwidget->takeItem(row);
         delete checkbox;
+    } else {
+        QMessageBox::information(this, "Tip", "Please check the item before deleting.");
     }
 }
 
-void Mainwindow::onBtnAddClockClicked() {
+void Mainwindow::onBtnAddClockClicked()
+{
     DlgClocks* dlgClock = new DlgClocks(this);
     connect(dlgClock, &DlgClocks::sendMsg, this, &Mainwindow::recMsg);
-    // ��������
     dlgClock->exec();
-
-    //������ͼ
     delete dlgClock;
-    dlgClock = NULL;
 }
 
-void Mainwindow::onBtnDelClockClicked() {
+void Mainwindow::onBtnDelClockClicked()
+{
     QModelIndex index = p_tableView->currentIndex();
     int row = index.row();
+    if (row < 0 || row >= m_clockVec.size()) return;
+    killTimer(m_clockVec[row].timerId);
+    m_clockVec.removeAt(row);
     p_tableView->model()->removeRow(row);
-    removeClock(row);
 }
 
-void Mainwindow::slotTimerUpdate() {
-    QDateTime time = QDateTime::currentDateTime();//��ȡ��ǰ���ں�ʱ��
-    QString strdDate = time.toString("yyyy-MM-dd dddd");//��ʽΪ��-��-�� Сʱ-����-�� ����
-    QString strdTime = time.toString("hh:mm:ss");//��ʽΪ��-��-�� Сʱ-����-�� ����
-    ui.labelDate->setText(strdDate);
-    ui.labelTime->setText(strdTime);
+void Mainwindow::slotTimerUpdate()
+{
+    QDateTime time = QDateTime::currentDateTime();
+    ui.labelDate->setText(time.toString("yyyy-MM-dd dddd"));
+    ui.labelTime->setText(time.toString("hh:mm:ss"));
 }
 
-void Mainwindow::recQStr(QString str) {
-    //��ȡ��ǰ������
-    int row = p_listwidget->count();
+void Mainwindow::recQStr(QString str, QString priority)
+{
     QListWidgetItem* item = new QListWidgetItem(p_listwidget);
     item->setSizeHint(QSize(0, 30));
-    //�ڵ�ǰ������item  checkbox
+
+    QColor bgColor("#A0F4E7");
+    if (priority == "high")     bgColor = QColor("#FFB3B3");
+    else if (priority == "low") bgColor = QColor("#D0D0D0");
+    item->setBackground(QBrush(bgColor));
+
     QCheckBox* checkbox = new QCheckBox;
-    item->setBackground(QBrush(QColor("#A0F4E7")));
     checkbox->setText(str);
     checkbox->setStyleSheet("QCheckBox{color:white;font-weight:bold;height:30px}");
-    //checkbox->setStyleSheet("QCheckBox{color:#F89F92;font-weight:bold;height:30px}");
     p_listwidget->addItem(item);
     p_listwidget->setItemWidget(item, checkbox);
-    connect(checkbox, &QCheckBox::stateChanged, this, &Mainwindow::checkboxStateChanged);
+
+    connect(checkbox, &QCheckBox::stateChanged, this, [this, checkbox](int state) {
+        QFont f = checkbox->font();
+        f.setStrikeOut(state == Qt::Checked);
+        checkbox->setFont(f);
+        checkboxStateChanged(state);
+    });
 }
 
-void Mainwindow::recMsg(QString time, QString content) {
-    // ��ȡ����ǰ������
-    int row = p_tableView->model()->rowCount();
+void Mainwindow::recMsg(QString time, QString content)
+{
     int insertRow = CalRow(time);
     QStandardItem* item1 = new QStandardItem(time);
     QStandardItem* item2 = new QStandardItem(content);
@@ -240,170 +243,140 @@ void Mainwindow::recMsg(QString time, QString content) {
     item1->setBackground(QBrush(QColor("#A0F4E7")));
     item2->setBackground(QBrush(QColor("#A0F4E7")));
     QList<QStandardItem*> itemList;
-    itemList << item1;
-    itemList << item2;
+    itemList << item1 << item2;
     p_model->insertRow(insertRow, itemList);
-    //p_model->setItem(insertRow, 0, item1);
-    //p_model->setItem(insertRow, 1, item2);
 
-    // ��ȡ�˿�ʱ��
-    QDateTime currentTime_ = QDateTime::currentDateTime();//��ȡ��ǰ���ں�ʱ��
+    QDateTime currentTime_ = QDateTime::currentDateTime();
     QString strDate = currentTime_.toString("yyyy-MM-dd");
-    //QString strdTime = currentTime.toString("hh:mm:ss");//��ʽΪ��-��-�� Сʱ-����-�� ����
-    //QString strSecond = currentTime_.toString("ss");
-    qDebug() << QStringLiteral("��ǰʱ��Ϊ��") << currentTime_;
-
-    // ƴ������ʱ��
-    QString strClockTime = QString("%1 %2:%3")
-        .arg(strDate).arg(time).arg("00");
+    QString strClockTime = QString("%1 %2:00").arg(strDate).arg(time);
     QDateTime clockTime_ = QDateTime::fromString(strClockTime, "yyyy-MM-dd hh:mm:ss");
-    qDebug() << QStringLiteral("����ʱ��Ϊ��") << clockTime_;
 
+    qint64 elapsed = currentTime_.msecsTo(clockTime_);
+    if (elapsed <= 0) {
+        QMessageBox::warning(this, "Warning", "The time has already passed.");
+        p_model->removeRow(insertRow);
+        return;
+    }
 
-    // ����ʱ���
-    int elapsed = currentTime_.msecsTo(clockTime_);     // ��λ�Ǻ���
-    qDebug() << QStringLiteral("��ʣʱ�䣺") << elapsed << QStringLiteral("����");
-
-    // ��ʼ��ʱ
-    int timeId = startTimer(elapsed);              // startTimer�ĵ�λ�Ǻ���
-    ClockNode* clockNode = new ClockNode{ timeId, time, content,NULL };
-    insertClock(insertRow, clockNode);
+    int timeId = startTimer((int)elapsed);
+    ClockNode clockNode;
+    clockNode.timerId = timeId;
+    clockNode.time    = time;
+    clockNode.content = content;
+    m_clockVec.insert(insertRow, clockNode);
 }
 
 void Mainwindow::recCloseCommand()
 {
-    p_tableView->model()->removeRow(0);
     m_soundEffect->stop();
 }
 
-void Mainwindow::insertClock(int insertIndex, ClockNode* clockNode) {
-    ClockNode* p = p_head->next;          // ����ָ��     
-    ClockNode* q = p_head;               // ָ����һ�ڵ��ָ��
-    int index = 0;
-    while (p != NULL && index != insertIndex) {
-        q = p;
-        p = p->next;
-        index++;
-    }
-    q->next = clockNode;
-    clockNode->next = p;
-}
-
-void Mainwindow::removeClock(int timerid, QString &time, QString &content) {
-    ClockNode* p = p_head->next;          // ����ָ��     
-    ClockNode* q = p_head;               // ָ����һ�ڵ��ָ��
-    while (p != NULL) {
-        if (p->timerId == timerid) {
-            time = p->time;
-            content = p->content;
-            q->next = p->next;
-            delete p;
-            p = NULL;
-
-            if (q->next == NULL)         // ��ʱ˵��ɾ���������һ���ڵ㣬��Ҫ��p_clockList����ָ��ͷ�ڵ�
-                p_clockList = p_head;
-            return;
-        }
-        q = p;
-        p = p->next;
-    }
-}
-
-void Mainwindow::removeClock(int index) {
-    ClockNode* p = p_head->next;          // ����ָ��     
-    ClockNode* q = p_head;               // ָ����һ�ڵ��ָ��
-    int count=0;
-    while (p != NULL && index!=count) {
-        count++;
-        q = p;
-        p = p->next;
-    }
-    if (p == NULL)
-        return;
-    q->next = p->next;
-    killTimer(p->timerId);  // �ص��󶨵ļ�ʱ��
-    delete p;
-    p = NULL;
-}
-
-void Mainwindow::clearClock()
+void Mainwindow::closeEvent(QCloseEvent* event)
 {
-    ClockNode* p = p_head->next;          // ����ָ��     
-    ClockNode* q = p_head;               // ָ����һ�ڵ��ָ��
-    while (p!=NULL){
-        q = p->next; //q�������p����һָ����
-        killTimer(p->timerId);  // �ص��󶨵ļ�ʱ��
-        delete p; //�ͷ�p
-        p = q; //��q�����е����ݷ�����p
-    }
-    p_head->next = NULL;
-}
-
-void Mainwindow::closeEvent(QCloseEvent* event) {
-    //���ڹر�ʱѯ���Ƿ��˳�
-    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("ȷ��"), QStringLiteral("�˳����򽫻�����������ݣ�ȷ��Ҫ�˳���������"),
+    QMessageBox::StandardButton result = QMessageBox::question(
+        this,
+        QStringLiteral("ȷ��"),
+        QStringLiteral("�˳����򽫻�����������ݣ�ȷ��Ҫ�˳���������"),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Yes);
 
-    if (result == QMessageBox::Yes){
+    if (result == QMessageBox::Yes) {
+        saveData();
         isClosed = true;
         event->accept();
-    }
-        
-    else
+    } else {
         event->ignore();
+    }
 }
 
 void Mainwindow::hideEvent(QHideEvent* event)
 {
-    if (isClosed){              // ��ֹ�رմ���ʱ����ʾ���ص�����
+    if (isClosed) {
         event->accept();
         return;
     }
-    if (m_tray->isVisible())
-    {
-        qDebug() << QStringLiteral("���ص�����");
-        m_tray->showMessage("RemindMe", QStringLiteral("���ص�����ͼ����")); //��ʾ�û����ص�������
-        event->ignore(); //�����¼�
-    }
-    else
+    if (m_tray->isVisible()) {
+        m_tray->showMessage("RemindMe", QStringLiteral("���ص�����ͼ����"));
+        event->ignore();
+    } else {
         event->accept();
+    }
 }
 
-void Mainwindow::timerEvent(QTimerEvent* event) {
+void Mainwindow::timerEvent(QTimerEvent* event)
+{
     int timerid = event->timerId();
     QString time;
     QString content;
-    qDebug() << timerid;
+    QString repeat = "none";
+    int foundRow = -1;
 
-    // �������������Ƴ��������ʱ��������
-    removeClock(timerid, time, content);
+    for (int i = 0; i < m_clockVec.size(); i++) {
+        if (m_clockVec[i].timerId == timerid) {
+            time     = m_clockVec[i].time;
+            content  = m_clockVec[i].content;
+            repeat   = m_clockVec[i].repeat;
+            foundRow = i;
+            break;
+        }
+    }
 
-    // ������ɾ����Ӧ����
+    killTimer(timerid);
 
-    // ����
-    if(soundSwitch)
-         m_soundEffect->play();
+    if (foundRow < 0) return;
 
-    // ����
+    // Handle repeat: reschedule before removing from vec
+    if (repeat != "none") {
+        QDateTime now = QDateTime::currentDateTime();
+        QString strDate = now.toString("yyyy-MM-dd");
+        QDateTime nextTrigger = QDateTime::fromString(
+            QString("%1 %2:00").arg(strDate).arg(time), "yyyy-MM-dd hh:mm:ss");
+
+        if (repeat == "daily") {
+            nextTrigger = nextTrigger.addDays(1);
+        } else if (repeat == "weekly") {
+            nextTrigger = nextTrigger.addDays(7);
+        } else if (repeat == "workday") {
+            nextTrigger = nextTrigger.addDays(1);
+            while (nextTrigger.date().dayOfWeek() >= 6)
+                nextTrigger = nextTrigger.addDays(1);
+        }
+
+        qint64 elapsed = now.msecsTo(nextTrigger);
+        if (elapsed > 0) {
+            int newId = startTimer((int)elapsed);
+            m_clockVec[foundRow].timerId = newId;
+            // Keep the table row, just update display if needed
+        } else {
+            m_clockVec.removeAt(foundRow);
+            p_model->removeRow(foundRow);
+        }
+    } else {
+        m_clockVec.removeAt(foundRow);
+        p_model->removeRow(foundRow);
+    }
+
+    if (soundSwitch) m_soundEffect->play();
+
     this->showNormal();
     MyDialog* remindPop = new MyDialog(this);
     remindPop->SetLabelContent(content);
     remindPop->SetLabelIcon(":/res/windowIcon.png");
-    remindPop->setAttribute(Qt::WA_DeleteOnClose);		// �����˳��Զ�����
+    remindPop->setAttribute(Qt::WA_DeleteOnClose);
     remindPop->show();
-    connect(remindPop, &MyDialog::signalMyDialogBtnCloseClicked, this, &Mainwindow::recCloseCommand);
-
-    // ȡ�����˼�ʱ��
-    killTimer(timerid);
+    connect(remindPop, &MyDialog::signalMyDialogBtnCloseClicked,
+            this, &Mainwindow::recCloseCommand);
+    connect(remindPop, &MyDialog::signalSnooze, this, [this, content](int minutes) {
+        QDateTime now = QDateTime::currentDateTime();
+        QString snoozeTime = now.addSecs(minutes * 60).toString("hh:mm");
+        recMsg(snoozeTime, content);
+    });
 }
 
 void Mainwindow::onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-        this->showNormal();
-        break;
     case QSystemTrayIcon::DoubleClick:
         this->showNormal();
         break;
@@ -412,137 +385,220 @@ void Mainwindow::onActivatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason
     }
 }
 
-int Mainwindow::CalRow(QString newTime) {
-    QDateTime _newTime = QDateTime::fromString(newTime, "hh:mm");
-    ClockNode* p = p_head->next;          // ����ָ��     
-    ClockNode* q = p_head;               // ָ����һ�ڵ��ָ��
-    int index = 0;
-    while (p != NULL) {
-        QDateTime _tmpTime = QDateTime::fromString(p->time, "hh:mm");
-        if (_newTime <= _tmpTime) {
-            return index;
-        }
-        q = p;
-        p = p->next;
-        index++;
+int Mainwindow::CalRow(QString newTime)
+{
+    QTime _newTime = QTime::fromString(newTime, "hh:mm");
+    for (int i = 0; i < m_clockVec.size(); i++) {
+        QTime _tmpTime = QTime::fromString(m_clockVec[i].time, "hh:mm");
+        if (_newTime <= _tmpTime) return i;
     }
-    return index;
+    return m_clockVec.size();
 }
 
 void Mainwindow::ShowSettings()
 {
-    int h = height();
-    int panelH = 270;
-    int panelY = (h - panelH) / 2;
-
+    int panelY = (height() - PANEL_H) / 2;
     ui.btnShowSettings->hide();
     ui.frameSettings->show();
-    QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry");
+    QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry", this);
     animation->setDuration(500);
-    animation->setStartValue(QRect(QPoint(0, panelY), QSize(0, panelH)));
-    animation->setEndValue(QRect(QPoint(0, panelY), QSize(150, panelH)));
+    animation->setStartValue(QRect(QPoint(0, panelY), QSize(0, PANEL_H)));
+    animation->setEndValue(QRect(QPoint(0, panelY), QSize(150, PANEL_H)));
     animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void Mainwindow::HideSettings() {
-    int h = height();
-    int panelH = 270;
-    int panelY = (h - panelH) / 2;
-
-    QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry");
+void Mainwindow::HideSettings()
+{
+    int panelY = (height() - PANEL_H) / 2;
+    QPropertyAnimation* animation = new QPropertyAnimation(ui.frameSettings, "geometry", this);
     animation->setDuration(100);
-    animation->setStartValue(QRect(QPoint(0, panelY), QSize(150, panelH)));
-    animation->setEndValue(QRect(QPoint(0, panelY), QSize(0, panelH)));
+    animation->setStartValue(QRect(QPoint(0, panelY), QSize(150, PANEL_H)));
+    animation->setEndValue(QRect(QPoint(0, panelY), QSize(0, PANEL_H)));
     animation->start(QAbstractAnimation::DeleteWhenStopped);
     ui.btnShowSettings->show();
 }
 
 void Mainwindow::ClearAll()
 {
-    QMessageBox::StandardButton result = QMessageBox::question(this, QStringLiteral("ȷ��"), QStringLiteral("��ȷ��Ҫ��������ճ�������������"),
+    QMessageBox::StandardButton result = QMessageBox::question(
+        this,
+        QStringLiteral("ȷ��"),
+        QStringLiteral("��ȷ��Ҫ��������ճ�������������"),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Yes);
 
     if (result == QMessageBox::Yes) {
-        // 1.����ճ�
         p_listwidget->clear();
-        qDebug() << QStringLiteral("�ճ������");
-        // 2.�����������
-        clearClock();
-        qDebug() << QStringLiteral("���������");
-        // 3.���������ʾ
-        p_tableView->model()->removeRows(0, p_tableView->model()->rowCount()); //ɾ��������;
-        qDebug() << QStringLiteral("������ʾ�����");
+        for (auto& c : m_clockVec) killTimer(c.timerId);
+        m_clockVec.clear();
+        p_tableView->model()->removeRows(0, p_tableView->model()->rowCount());
     }
 }
 
-void Mainwindow::onBtnSwitchClicked() {
-    if (soundSwitch) {
-        soundSwitch = false;
-        QIcon icon(":/res/switch_off.png");  // ����Դ�ļ�����ͼ�꣬ע���滻��ȷ��·��
-        ui.btnSwitch->setIcon(icon);
+void Mainwindow::onBtnSwitchClicked()
+{
+    soundSwitch = !soundSwitch;
+    QIcon icon(soundSwitch ? ":/res/switch_on.png" : ":/res/switch_off.png");
+    ui.btnSwitch->setIcon(icon);
+    if (m_actionMute) m_actionMute->setText(soundSwitch ? "Mute" : "Unmute");
+}
+
+// ---------------------------------------------------------------------------
+// Persistent storage
+// ---------------------------------------------------------------------------
+void Mainwindow::saveData()
+{
+    QJsonArray tasks;
+    for (int i = 0; i < p_listwidget->count(); i++) {
+        QListWidgetItem* item = p_listwidget->item(i);
+        QCheckBox* cb = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
+        QJsonObject t;
+        t["text"]     = cb->text();
+        t["checked"]  = cb->isChecked();
+        t["priority"] = item->background().color().name(); // store color as priority proxy
+        tasks.append(t);
     }
-    else {
-        soundSwitch = true;
-        QIcon icon(":/res/switch_on.png");  // ����Դ�ļ�����ͼ�꣬ע���滻��ȷ��·��
-        ui.btnSwitch->setIcon(icon);
+
+    QJsonArray clocks;
+    for (auto& c : m_clockVec) {
+        QJsonObject o;
+        o["time"]    = c.time;
+        o["content"] = c.content;
+        o["repeat"]  = c.repeat;
+        clocks.append(o);
+    }
+
+    QJsonObject root;
+    root["tasks"]  = tasks;
+    root["clocks"] = clocks;
+
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QFile file(dir + "/remindme_data.json");
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(root).toJson());
+        file.close();
+    }
+}
+
+void Mainwindow::loadData()
+{
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QFile file(dir + "/remindme_data.json");
+    if (!file.open(QIODevice::ReadOnly)) return;
+
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    if (!doc.isObject()) return;
+
+    QJsonObject root = doc.object();
+
+    // Restore tasks
+    for (auto v : root["tasks"].toArray()) {
+        QJsonObject t = v.toObject();
+        QString priority = "normal";
+        QString colorName = t["priority"].toString();
+        if (colorName == QColor("#FFB3B3").name()) priority = "high";
+        else if (colorName == QColor("#D0D0D0").name()) priority = "low";
+        recQStr(t["text"].toString(), priority);
+        // restore checked state
+        if (t["checked"].toBool()) {
+            QListWidgetItem* item = p_listwidget->item(p_listwidget->count() - 1);
+            QCheckBox* cb = static_cast<QCheckBox*>(p_listwidget->itemWidget(item));
+            cb->setChecked(true);
+        }
+    }
+
+    // Restore clocks
+    QDateTime now = QDateTime::currentDateTime();
+    for (auto v : root["clocks"].toArray()) {
+        QJsonObject o = v.toObject();
+        QString time    = o["time"].toString();
+        QString content = o["content"].toString();
+        QString repeat  = o["repeat"].toString("none");
+
+        // Calculate next trigger
+        QString strDate   = now.toString("yyyy-MM-dd");
+        QDateTime trigger = QDateTime::fromString(
+            QString("%1 %2:00").arg(strDate).arg(time), "yyyy-MM-dd hh:mm:ss");
+
+        if (trigger <= now) {
+            if (repeat == "none") continue; // past one-shot, skip
+            // advance to next occurrence
+            if (repeat == "daily") {
+                while (trigger <= now) trigger = trigger.addDays(1);
+            } else if (repeat == "weekly") {
+                while (trigger <= now) trigger = trigger.addDays(7);
+            } else if (repeat == "workday") {
+                trigger = trigger.addDays(1);
+                while (trigger <= now || trigger.date().dayOfWeek() >= 6)
+                    trigger = trigger.addDays(1);
+            }
+        }
+
+        qint64 elapsed = now.msecsTo(trigger);
+        if (elapsed <= 0) continue;
+
+        int insertRow = CalRow(time);
+        QStandardItem* item1 = new QStandardItem(time);
+        QStandardItem* item2 = new QStandardItem(content);
+        item1->setTextAlignment(Qt::AlignCenter);
+        item2->setTextAlignment(Qt::AlignCenter);
+        item1->setBackground(QBrush(QColor("#A0F4E7")));
+        item2->setBackground(QBrush(QColor("#A0F4E7")));
+        item1->setForeground(QBrush(QColor("#FFFFFF")));
+        item2->setForeground(QBrush(QColor("#FFFFFF")));
+        QList<QStandardItem*> row;
+        row << item1 << item2;
+        p_model->insertRow(insertRow, row);
+
+        int timeId = startTimer((int)elapsed);
+        ClockNode cn;
+        cn.timerId = timeId;
+        cn.time    = time;
+        cn.content = content;
+        cn.repeat  = repeat;
+        m_clockVec.insert(insertRow, cn);
     }
 }
 
 // ---------------------------------------------------------------------------
-// 响应式布局：所有绝对定位控件随窗口尺寸重新计算位置与大小
+// Responsive layout
 // ---------------------------------------------------------------------------
 void Mainwindow::repositionWidgets()
 {
     int W = width();
     int H = height();
 
-    // 布局常量
-    const int headerH   = 20;   // 标题标签高度
-    const int headerY   = 80;   // 标题行 Y
-    const int listTop   = 110;  // 列表/表格起始 Y
-    const int btnBarH   = 60;   // 底部按钮栏高度
-    const int btnBarY   = H - btnBarH;
-    const int listH     = btnBarY - listTop - 10;
+    const int btnBarY = H - BTN_BAR_H;
+    const int listH   = btnBarY - LIST_TOP - 10;
+    const int colW    = W / 4;
+    const int leftX   = colW / 2 - 100;
+    const int rightX  = W - colW / 2 - 100;
 
-    // 列宽：左侧日程区 / 中间时钟区 / 右侧闹钟区 各占 1/4 宽度
-    const int colW      = W / 4;
-    const int leftX     = colW / 2 - 100;           // 日程列表左边距（列中心 - 半宽）
-    const int rightX    = W - colW / 2 - 100;       // 闹钟表格左边距
+    ui.label->setGeometry(leftX, HEADER_Y, 200, HEADER_H);
 
-    // — 日程标题标签
-    ui.label->setGeometry(leftX, headerY, 200, headerH);
-
-    // — 日程列表（代码创建）
     if (p_listwidget)
-        p_listwidget->setGeometry(leftX, listTop, 200, listH);
+        p_listwidget->setGeometry(leftX, LIST_TOP, 200, listH);
 
-    // — 时钟区（居中）
     int clockX = (W - 200) / 2;
-    ui.labelDate->setGeometry(clockX, listTop, 200, 41);
-    ui.labelTime->setGeometry(clockX, listTop + 50, 200, 51);
-    ui.labelImage->setGeometry(clockX - 40, listTop + 200, 281, 191);
+    ui.labelDate->setGeometry(clockX, LIST_TOP, 200, 41);
+    ui.labelTime->setGeometry(clockX, LIST_TOP + 50, 200, 51);
+    ui.labelImage->setGeometry(clockX - 40, LIST_TOP + 200, 281, 191);
 
-    // — 闹钟表头
-    ui.label_2->setGeometry(rightX, headerY, 60, headerH);
-    ui.label_3->setGeometry(rightX + 60, headerY, 140, headerH);
+    ui.label_2->setGeometry(rightX, HEADER_Y, 60, HEADER_H);
+    ui.label_3->setGeometry(rightX + 60, HEADER_Y, 140, HEADER_H);
 
-    // — 闹钟表格（代码创建）
     if (p_tableView)
-        p_tableView->setGeometry(rightX, listTop, 200, listH);
+        p_tableView->setGeometry(rightX, LIST_TOP, 200, listH);
 
-    // — 底部按钮栏
-    ui.widget->setGeometry(0, btnBarY, W, btnBarH);
+    ui.widget->setGeometry(0, btnBarY, W, BTN_BAR_H);
 
-    // — 展开按钮（左侧边缘，竖向居中）
-    const int panelH = 270;
     int btnShowY = (H - 80) / 2;
     ui.btnShowSettings->setGeometry(0, btnShowY, 10, 80);
 
-    // — 设置面板（若展开状态，同步更新位置）
     if (!ui.frameSettings->isHidden()) {
-        int panelY = (H - panelH) / 2;
-        ui.frameSettings->setGeometry(0, panelY, 150, panelH);
+        int panelY = (H - PANEL_H) / 2;
+        ui.frameSettings->setGeometry(0, panelY, 150, PANEL_H);
     }
 }
 

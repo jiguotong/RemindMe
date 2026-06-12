@@ -2,27 +2,34 @@
 #define _MYDIALOG_H
 #include <QDialog>
 #include <QCloseEvent>
+#include <QKeyEvent>
+#include <QSpinBox>
 #include "ui_MyDialog.h"
 
 class MyDialog : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	MyDialog(QWidget *parent = nullptr);
-	~MyDialog();
-	void SetLabelContent(QString);
-	void SetLabelIcon(QString);
+    MyDialog(QWidget *parent = nullptr);
+    ~MyDialog();
+    void SetLabelContent(const QString&);
+    void SetLabelIcon(const QString&);
 
 signals:
-	void signalMyDialogBtnCloseClicked();		// 当点击关闭按钮时，发送此消息
-public slots:
-	void onBtnCloseClicked();
+    void signalMyDialogBtnCloseClicked();
+    void signalSnooze(int minutes);
+
+private slots:
+    void onBtnCloseClicked();
+    void onBtnSnoozeClicked();
+
+protected:
+    void closeEvent(QCloseEvent* event);
+    void keyPressEvent(QKeyEvent* event);
 
 private:
-	void closeEvent(QCloseEvent* event);
-private:
-	Ui::MyDialogClass ui;
+    Ui::MyDialogClass ui;
 };
 
 #endif

@@ -5,70 +5,45 @@
 #include <QMessageBox>
 #include <QDateTime>
 #define _CRTDBG_MAP_ALLOC
-#define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #include <stdlib.h>
-#include <crtdbg.h>
 
 #include "Mainwindow.h"
+
 int main(int argc, char *argv[])
 {
-    // ����ڴ�й©
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-    // �������
     QApplication a(argc, argv);
+    a.setApplicationName("RemindMe");
     qDebug() << "QApplication start!";
 
-    /*ʱ����Ч��Ϊ3�죬����󲻿��ã�*/
-    QDateTime baseTime = QDateTime::fromString("2026-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss");       // �涨һ����ʼ����׼ʱ��
-    QDateTime currentTime = QDateTime::currentDateTime();                                           //��ȡϵͳ��ǰ��ʱ��
-    int startTime = baseTime.toTime_t();        //����ǰʱ��תΪʱ���
-    int endTime = currentTime.toTime_t();       //����ǰʱ��תΪʱ���
-    if (endTime - startTime > 86400*180) {
-        QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
+    // Time-limited build: valid for 180 days from base date
+    QDateTime baseTime    = QDateTime::fromString("2026-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss");
+    QDateTime currentTime = QDateTime::currentDateTime();
+    qint64 startTime = baseTime.toSecsSinceEpoch();
+    qint64 endTime   = currentTime.toSecsSinceEpoch();
+    if (endTime - startTime > 86400LL * 180) {
+        QMessageBox::warning(nullptr, "Error", "Time permission exceeded! Please contact the developer!");
         return -1;
     }
 
-
-    // ����һ��������
+    // Single-instance guard via shared memory.
+    // Intentionally never deleted: shared memory must outlive the process
+    // to block a second instance from launching.
     QMutex mutex;
-    mutex.lock();// �����ٽ���
-    // ���ٽ����ڴ���SingleApp�Ĺ����ڴ��
+    mutex.lock();
     static QSharedMemory* shareMem = new QSharedMemory("SingleApp");
     if (!shareMem->create(1)) {
-        mutex.unlock();// �ر��ٽ���
-        QMessageBox::information(0, "Tip", "RemindMe has been running!");
-        return -1;  // ����ʧ�ܣ�˵������һ�����������У��˳���ǰ����
+        mutex.unlock();
+        QMessageBox::information(nullptr, "Tip", "RemindMe is already running!");
+        return -1;
     }
-    mutex.unlock();// �ر��ٽ���
+    mutex.unlock();
 
     Mainwindow w;
     w.showMaximized();
 
-    return a.exec(); 
-
+    int ret = a.exec();
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
     _CrtDumpMemoryLeaks();
-}   
-
-
-// �ο�����
-//https://blog.csdn.net/lion_cxq/article/details/115101356
-//https://blog.csdn.net/CXYYL/article/details/129275039
-
-//https://blog.csdn.net/weixin_42692504/article/details/108065692 ��С��������
-
-// ϵͳ����
-//trayIcon = new QSystemTrayIcon();
-//trayIcon->setIcon(QIcon(":/logo.ico"));
-//
-//QMenu* menu = new QMenu();
-//QAction* action = menu->addAction("�˳�");
-//connect(action, &QAction::triggered, this, &Widget::systemExit);
-//
-//trayIcon->setContextMenu(menu);
-//trayIcon->show();
-
-// ����QTableView
-//https://blog.csdn.net/u010031316/article/details/116886567
+    return ret;
+}

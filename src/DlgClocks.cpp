@@ -1,65 +1,73 @@
 #include <QMessageBox>
 #include <QDateTime>
+#include <QTime>
 #include <QDebug>
+#include <QCloseEvent>
 #include "DlgClocks.h"
 
 DlgClocks::DlgClocks(QWidget *parent)
-	: QDialog(parent)
+    : QDialog(parent)
 {
-	ui.setupUi(this);
-	setWindowFlags(Qt::FramelessWindowHint | Qt::Tool); // �ޱ߿�����
-	setAttribute(Qt::WA_TranslucentBackground);// ����͸������
-	connect(ui.btnConfirm, &QPushButton::clicked, this, &DlgClocks::OnBtnConfirm);
-	connect(ui.btnCancel, &QPushButton::clicked, this, &DlgClocks::OnBtnCancel);
+    ui.setupUi(this);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+    setAttribute(Qt::WA_TranslucentBackground);
+    connect(ui.btnConfirm, &QPushButton::clicked, this, &DlgClocks::OnBtnConfirm);
+    connect(ui.btnCancel,  &QPushButton::clicked, this, &DlgClocks::OnBtnCancel);
 }
 
-DlgClocks::~DlgClocks()
-{}
+DlgClocks::~DlgClocks() {}
 
-void DlgClocks::OnBtnConfirm() {
-	QString timeStr = ui.lineEditTime->text();
-	QString contentStr = ui.lineEditContent->text();
-	if (timeStr.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    ʱ�䲻����Ϊ��    "));
-		return;
-	}
-	if (contentStr.isEmpty()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    ���ݲ�����Ϊ��    "));
-		return;
-	}
-	// ��ֹ���������µķֺ�
-	timeStr = timeStr.replace(QStringLiteral("��"), ":");
+void DlgClocks::OnBtnConfirm()
+{
+    QString timeStr    = ui.lineEditTime->text();
+    QString contentStr = ui.lineEditContent->text();
 
-	// ���ʱ���ʽ�Ƿ�Ϊhh:mm
-	QDateTime date = QDateTime::fromString(timeStr, "h:mm");
-	if (!date.isValid()) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    ʱ���ʽ����ȷ    "));
-		return;
-	}
-	QDateTime time = QDateTime::currentDateTime();//��ȡ��ǰ���ں�ʱ��
-	QString strdTime = time.toString("h:mm");
-	time = QDateTime::fromString(strdTime, "h:mm");
-	if (date < time) {
-		QMessageBox::warning(this, "Warning", QStringLiteral("    ���������ڴ˿̵�ʱ��    "));
-		return;
-	}
+    if (timeStr.isEmpty()) {
+        QMessageBox::warning(this, "Warning", "    Time cannot be empty    ");
+        return;
+    }
+    if (contentStr.isEmpty()) {
+        QMessageBox::warning(this, "Warning", "    Content cannot be empty    ");
+        return;
+    }
 
+    // Allow Chinese colon
+    timeStr = timeStr.replace(QStringLiteral("^^"), ":");
 
-	
-	// 归一化为 hh:mm（补零），保证主窗口 CalRow/recMsg 解析一致
-	timeStr = QDateTime::fromString(timeStr, "h:mm").toString("hh:mm");
-	emit sendMsg(timeStr, contentStr);
-	this->close();
+    // Accept both h:mm and hh:mm
+    QTime inputTime = QTime::fromString(timeStr, "h:mm");
+    if (!inputTime.isValid()) {
+        QMessageBox::warning(this, "Warning", "    Invalid time format. Use hh:mm    ");
+        return;
+    }
+
+    // Validate not in the past (compare full datetime)
+    QDateTime now = QDateTime::currentDateTime();
+    QDateTime target(now.date(), inputTime);
+    if (target <= now) {
+        QMessageBox::warning(this, "Warning", "    Cannot set a time in the past    ");
+        return;
+    }
+
+    // Normalize to hh:mm
+    timeStr = inputTime.toString("hh:mm");
+    emit sendMsg(timeStr, contentStr);
+    this->close();
 }
 
-void DlgClocks::OnBtnCancel() {
-	this->close();
+void DlgClocks::OnBtnCancel()
+{
+    this->close();
 }
 
-void DlgClocks::closeEvent(QCloseEvent* e) {
-	this->close();
+void DlgClocks::closeEvent(QCloseEvent* e)
+{
+    e->accept();
 }
-void DlgClocks::showEvent(QShowEvent* event) {
-	activateWindow();
-	ui.lineEditTime->setFocus(); //����Ĭ�Ͻ���
+
+void DlgClocks::showEvent(QShowEvent* event)
+{
+    activateWindow();
+    ui.lineEditTime->setFocus();
+    QDialog::showEvent(event);
 }
