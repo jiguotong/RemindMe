@@ -37,7 +37,7 @@ Mainwindow::~Mainwindow()
 void Mainwindow::initWindow()
 {
     setWindowIcon(QIcon(":/res/windowIcon.png"));
-    setWindowTitle(QStringLiteral("������ȫ���Ը�����"));
+    setWindowTitle("RemindMe");
 
     ui.btnAdd->setShortcut(tr("Ctrl+Q"));
     ui.btnDel->setShortcut(tr("Ctrl+W"));
@@ -236,8 +236,8 @@ void Mainwindow::recMsg(QString time, QString content)
     QStandardItem* item2 = new QStandardItem(content);
     item1->setTextAlignment(Qt::AlignCenter);
     item2->setTextAlignment(Qt::AlignCenter);
-    item1->setFont(QFont(QStringLiteral("˼Դ���� CN BOLD"), 10));
-    item2->setFont(QFont(QStringLiteral("˼Դ���� CN BOLD"), 10));
+    item1->setFont(QFont("Microsoft YaHei", 10));
+    item2->setFont(QFont("Microsoft YaHei", 10));
     item1->setForeground(QBrush(QColor("#FFFFFF")));
     item2->setForeground(QBrush(QColor("#FFFFFF")));
     item1->setBackground(QBrush(QColor("#A0F4E7")));
@@ -275,8 +275,8 @@ void Mainwindow::closeEvent(QCloseEvent* event)
 {
     QMessageBox::StandardButton result = QMessageBox::question(
         this,
-        QStringLiteral("ȷ��"),
-        QStringLiteral("�˳����򽫻�����������ݣ�ȷ��Ҫ�˳���������"),
+        "Confirm",
+        "Exit will clear all unsaved data. Are you sure?",
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Yes);
 
@@ -296,7 +296,7 @@ void Mainwindow::hideEvent(QHideEvent* event)
         return;
     }
     if (m_tray->isVisible()) {
-        m_tray->showMessage("RemindMe", QStringLiteral("���ص�����ͼ����"));
+        m_tray->showMessage("RemindMe", "Minimized to tray.");
         event->ignore();
     } else {
         event->accept();
@@ -422,8 +422,8 @@ void Mainwindow::ClearAll()
 {
     QMessageBox::StandardButton result = QMessageBox::question(
         this,
-        QStringLiteral("ȷ��"),
-        QStringLiteral("��ȷ��Ҫ��������ճ�������������"),
+        "Confirm",
+        "Clear all tasks and alarms?",
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Yes);
 

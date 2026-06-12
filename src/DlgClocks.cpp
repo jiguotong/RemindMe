@@ -32,7 +32,7 @@ void DlgClocks::OnBtnConfirm()
     }
 
     // Allow Chinese colon
-    timeStr = timeStr.replace(QStringLiteral("^^"), ":");
+    timeStr = timeStr.replace(QString::fromUtf8("\xef\xbc\x9a"), ":"); // full-width colon -> half-width
 
     // Accept both h:mm and hh:mm
     QTime inputTime = QTime::fromString(timeStr, "h:mm");
