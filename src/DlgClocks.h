@@ -5,19 +5,23 @@
 
 class DlgClocks : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 signals:
-	void sendMsg(QString,QString);
-public:
-	DlgClocks(QWidget *parent = nullptr);
-	~DlgClocks();
+    void sendMsg(QString time, QString content);
 
 public:
-	void OnBtnConfirm();
-	void OnBtnCancel();
-	void closeEvent(QCloseEvent* e);
-	void showEvent(QShowEvent* event);
+    DlgClocks(QWidget *parent = nullptr);
+    ~DlgClocks();
+
+private slots:
+    void OnBtnConfirm();
+    void OnBtnCancel();
+
 private:
-	Ui::DlgClocksClass ui;
+    void closeEvent(QCloseEvent* e);
+    void showEvent(QShowEvent* event);
+
+private:
+    Ui::DlgClocksClass ui;
 };

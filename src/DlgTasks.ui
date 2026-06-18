@@ -7,14 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>402</width>
-    <height>85</height>
+    <height>115</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>DlgTasks</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
   </property>
   <widget class="QFrame" name="frame">
    <property name="geometry">
@@ -22,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>371</width>
-     <height>61</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -36,18 +33,18 @@
 {
 	font: 25 12pt '微软雅黑 Light';
 	color: rgb(31,31,31);
-	padding-left:20px; 
+	padding-left:20px;
 	background-color: rgb(255, 255, 255);
 	border:1px solid rgb(20,196,188);
 	border-radius:10px;
 }
-QPushButton
+#comboPriority
 {
-	font: 25 12pt '微软雅黑';
-	color: rgb(255,255,255);
-	background-color: rgb(20,196,188);
-	border:none;
-	border-radius:10px;
+	font: 12pt '微软雅黑 Light';
+	color: rgb(31,31,31);
+	background-color: rgb(255, 255, 255);
+	border:1px solid rgb(20,196,188);
+	border-radius:6px;
 }
 QPushButton
 {
@@ -73,22 +70,45 @@ QPushButton:pressed
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLineEdit" name="lineEdit"/>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="lineEdit"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnConfirm">
+        <property name="text">
+         <string>OK</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCancel">
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
-     <widget class="QPushButton" name="btnConfirm">
-      <property name="text">
-       <string>确定</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnCancel">
-      <property name="text">
-       <string>取消</string>
-      </property>
+     <widget class="QComboBox" name="comboPriority">
+      <item>
+       <property name="text">
+        <string>High Priority</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Normal</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Low Priority</string>
+       </property>
+      </item>
      </widget>
     </item>
    </layout>

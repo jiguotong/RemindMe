@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>125</height>
+    <height>145</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>450</width>
-    <height>125</height>
+    <height>145</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>450</width>
-    <height>125</height>
+    <height>145</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,15 +29,6 @@
    <string notr="true">#frame
 {
  	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(251,102,102, 220), stop:1 rgba(20,196,188, 230));
-	border:none;
-	border-radius:10px;
-}
-
-QPushButton
-{
-	font: 25 12pt '微软雅黑';
-	color: rgb(255,255,255);
-	background-color: rgb(20,196,188);
 	border:none;
 	border-radius:10px;
 }
@@ -59,8 +50,15 @@ QPushButton:pressed
 }
 #labelContent
 {
-    font: bold normal 15px &quot;Microsoft YaHei&quot;;
+    font: bold normal 15px "Microsoft YaHei";
 	color: rgb(255,255,255);
+}
+QSpinBox
+{
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(20,196,188);
+    border-radius: 4px;
+    color: rgb(31,31,31);
 }</string>
   </property>
   <widget class="QFrame" name="frame">
@@ -69,7 +67,7 @@ QPushButton:pressed
      <x>0</x>
      <y>10</y>
      <width>450</width>
-     <height>111</height>
+     <height>131</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -107,7 +105,7 @@ QPushButton:pressed
     <property name="geometry">
      <rect>
       <x>66</x>
-      <y>20</y>
+      <y>10</y>
       <width>311</width>
       <height>50</height>
      </rect>
@@ -122,14 +120,49 @@ QPushButton:pressed
    <widget class="QPushButton" name="btnClose">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>80</y>
+      <x>110</x>
+      <y>95</y>
       <width>75</width>
-      <height>23</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>关闭</string>
+     <string>Close</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinSnooze">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>95</y>
+      <width>55</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>60</number>
+    </property>
+    <property name="value">
+     <number>5</number>
+    </property>
+    <property name="suffix">
+     <string> min</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnSnooze">
+    <property name="geometry">
+     <rect>
+      <x>262</x>
+      <y>95</y>
+      <width>90</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Snooze</string>
     </property>
    </widget>
   </widget>

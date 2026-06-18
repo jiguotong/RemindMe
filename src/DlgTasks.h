@@ -2,24 +2,26 @@
 
 #include <QDialog>
 #include "ui_DlgTasks.h"
-//Q_GLOBAL_STATIC(DlgTasks, g_dlgTasks);
+
 class DlgTasks : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 signals:
-	void SendText(QString str);
-public:
-	DlgTasks(QWidget *parent = nullptr);
-	~DlgTasks();
+    void SendText(QString text, QString priority);
 
 public:
-	void OnBtnConfirm();
-	void OnBtnCancel();
-	
+    DlgTasks(QWidget *parent = nullptr);
+    ~DlgTasks();
+
+private slots:
+    void OnBtnConfirm();
+    void OnBtnCancel();
+
 private:
-	void closeEvent(QCloseEvent* e);
-	void showEvent(QShowEvent* event);
+    void closeEvent(QCloseEvent* e);
+    void showEvent(QShowEvent* event);
+
 private:
-	Ui::DlgTasksClass ui;
+    Ui::DlgTasksClass ui;
 };

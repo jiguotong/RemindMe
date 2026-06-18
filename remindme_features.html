@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>RemindMe · 功能介绍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,200..900,0..100&family=JetBrains+Mono:wght@300;400;500;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #efe8d8;
+    --paper-deep: #e6dec9;
+    --ink: #14161f;
+    --ink-soft: #2c2f3d;
+    --ink-mute: #5c6072;
+    --rule: #14161f;
+    --accent: #c0492c;
+    --accent-soft: #e8a48c;
+    --signal: #2d5d3a;
+    --signal-soft: #b8d4ad;
+    --warn: #8a6a00;
+    --warn-soft: #f0e0a0;
+    --grid: rgba(20, 22, 31, 0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Manrope', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    padding: 56px 48px 80px;
+    min-height: 100vh;
+  }
+  .page { max-width: 1280px; margin: 0 auto; }
+
+  /* ---------- MASTHEAD ---------- */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 28px 0 24px;
+    margin-bottom: 4px;
+  }
+  .mast-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .mast-meta span::before { content: "▸ "; color: var(--accent); }
+  .mast-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "wght" 360, "SOFT" 30;
+    font-size: 64px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .mast-title em {
+    font-variation-settings: "opsz" 144, "wght" 280, "SOFT" 100;
+    font-style: italic;
+    color: var(--accent);
+  }
+  .mast-sub {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 14, "wght" 350;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    max-width: 860px;
+    line-height: 1.6;
+  }
+
+  /* ---------- LEGEND ---------- */
+  .legend {
+    display: flex;
+    gap: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-swatch { width: 14px; height: 14px; border: 1.5px solid var(--ink); }
+
+  /* ---------- SECTION ---------- */
+  .section { margin: 56px 0 32px; }
+  .section-head {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: baseline;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 8px;
+    margin-bottom: 32px;
+    gap: 24px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 60, "wght" 420;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ---------- BOX ---------- */
+  .box {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    padding: 18px 20px;
+    position: relative;
+  }
+  .box.dense { background: var(--paper-deep); }
+  .box.accent-box { border-color: var(--accent); background: rgba(232, 164, 140, 0.12); }
+  .box.signal-box { border-color: var(--signal); background: rgba(184, 212, 173, 0.2); }
+  .box.warn-box { border-color: var(--warn); background: rgba(240, 224, 160, 0.25); }
+  .b-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .box.accent-box .b-tag { color: var(--accent); }
+  .box.signal-box .b-tag { color: var(--signal); }
+  .box.warn-box .b-tag { color: var(--warn); }
+  .b-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 30, "wght" 480;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+  .b-body {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .b-body b { color: var(--ink); }
+  .b-body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    background: var(--paper-deep);
+    padding: 1px 6px;
+    border: 1px solid var(--ink);
+  }
+
+  /* ---------- FEAT GRID ---------- */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 2px solid var(--ink);
+  }
+  .feat-cell {
+    padding: 18px 18px 16px;
+    border-right: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .feat-cell:nth-child(3n) { border-right: none; }
+  .feat-cell:nth-last-child(-n+3) { border-bottom: none; }
+  .feat-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .feat-icon {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .feat-name {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 30, "wght" 460;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .feat-val {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    padding: 3px 10px;
+    border: 1.5px solid currentColor;
+    margin-top: 4px;
+    align-self: flex-start;
+  }
+  .badge.new    { color: var(--signal); border-color: var(--signal); }
+  .badge.core   { color: var(--accent); border-color: var(--accent); }
+  .badge.util   { color: var(--warn);   border-color: var(--warn); }
+
+  /* ---------- KPI STRIP ---------- */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 2px solid var(--ink);
+    margin-bottom: 32px;
+  }
+  .kpi {
+    padding: 22px 20px;
+    border-right: 1.5px solid var(--ink);
+  }
+  .kpi:last-child { border-right: none; }
+  .kpi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "wght" 380;
+    font-size: 44px;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+  .kpi-value em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "wght" 280;
+    color: var(--accent);
+    font-size: 0.55em;
+  }
+  .kpi-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ---------- SHORTCUT TABLE ---------- */
+  .shortcut-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid var(--ink);
+  }
+  .shortcut-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper-deep);
+  }
+  .shortcut-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--ink);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    vertical-align: middle;
+  }
+  .shortcut-table tr:last-child td { border-bottom: none; }
+  .shortcut-table td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    white-space: nowrap;
+    font-weight: 700;
+  }
+  .shortcut-table td b { color: var(--ink); }
+
+  /* ---------- ARCH TABLE ---------- */
+  .arch-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid var(--ink);
+  }
+  .arch-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper-deep);
+  }
+  .arch-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--ink);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    vertical-align: top;
+  }
+  .arch-table tr:last-child td { border-bottom: none; }
+  .arch-table td:first-child {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 30, "wght" 460;
+    font-size: 16px;
+    color: var(--ink);
+    white-space: nowrap;
+    width: 180px;
+  }
+  .arch-table td code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    background: var(--paper-deep);
+    padding: 1px 6px;
+    border: 1px solid var(--ink);
+  }
+  .arch-table td b { color: var(--ink); }
+
+  /* ---------- STRIPE ---------- */
+  .stripe {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+    border-top: 1px solid var(--ink);
+    padding: 18px 0 12px;
+    margin-top: 12px;
+    margin-bottom: 16px;
+  }
+  .stripe-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    padding: 4px 10px;
+  }
+  .stripe-name {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 60, "wght" 420;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+  .stripe-name em {
+    font-variation-settings: "opsz" 60, "wght" 320;
+    font-style: italic;
+    color: var(--accent);
+  }
+  .stripe-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+  }
+
+  /* ---------- CHECKLIST ---------- */
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .checklist li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    align-items: start;
+  }
+  .checklist li::before {
+    content: attr(data-num);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .checklist li b { color: var(--ink); }
+  .checklist li code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    background: var(--paper-deep);
+    padding: 1px 6px;
+    border: 1px solid var(--ink);
+  }
+
+  /* ---------- CONCLUSION ---------- */
+  .conclusion {
+    border: 2.5px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 32px 36px;
+    margin-top: 48px;
+  }
+  .conclusion .con-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 12px;
+  }
+  .conclusion p {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 30, "wght" 350;
+    font-size: 20px;
+    line-height: 1.65;
+    color: var(--paper);
+  }
+  .conclusion p em {
+    font-variation-settings: "opsz" 30, "wght" 500;
+    font-style: italic;
+    color: var(--accent-soft);
+  }
+  .conclusion p b {
+    font-variation-settings: "opsz" 30, "wght" 600;
+    font-style: normal;
+    color: #fff;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    margin-top: 72px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  @media print {
+    body { background-image: none; padding: 0; }
+    .page { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead">
+    <div class="mast-meta">
+      <span>Qt5 · C++ · Windows Desktop</span>
+      <span>feature/ai-upgrade</span>
+      <span>2026-06-12</span>
+    </div>
+    <h1 class="mast-title">RemindMe<br><em>功能介绍</em></h1>
+    <p class="mast-sub">Windows 桌面端备忘提醒工具，支持日程清单管理、闹钟定时提醒、数据持久化与系统托盘常驻。本文档介绍当前版本的完整功能、界面布局与快捷键。</p>
+  </header>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch" style="background:var(--paper-deep)"></span>基础功能</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(232,164,140,0.3);border-color:var(--accent)"></span>核心 / 提醒引擎</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(184,212,173,0.4);border-color:var(--signal)"></span>新增功能</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:var(--warn-soft);border-color:var(--warn)"></span>系统集成</span>
+  </div>
+
+  <!-- ============ §01 数字概览 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">版本概览</h2>
+      <span class="section-tag">feature/ai-upgrade · 当前版本</span>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">核心功能模块</div>
+        <div class="kpi-value">9<em>个</em></div>
+        <div class="kpi-note">时钟 / 日程 / 闹钟 / 持久化<br>托盘 / Snooze / 置顶 / 透明度 / 优先级</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">键盘快捷键</div>
+        <div class="kpi-value">6<em>组</em></div>
+        <div class="kpi-note">Ctrl+Q/W/E/R<br>Delete / Enter·Esc</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">闹钟重复模式</div>
+        <div class="kpi-value">4<em>种</em></div>
+        <div class="kpi-note">单次 / 每天<br>每周 / 工作日</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">数据持久化</div>
+        <div class="kpi-value">✓<em>JSON</em></div>
+        <div class="kpi-note">退出自动保存<br>启动自动恢复</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ §02 全部功能一览 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">功能全览</h2>
+      <span class="section-tag">9 个模块 · 完整列表</span>
+    </div>
+
+    <div class="feat-grid">
+      <!-- 01 实时时钟 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 01</span>
+        <div class="feat-icon">🕐</div>
+        <div class="feat-name">实时时钟</div>
+        <div class="feat-val">主界面中央显示当前<b>日期</b>（含星期）和<b>时间</b>（时:分:秒），每秒刷新，液晶字体风格，配熊猫动态图。</div>
+        <span class="badge core">CORE</span>
+      </div>
+      <!-- 02 日程清单 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 02</span>
+        <div class="feat-icon">📋</div>
+        <div class="feat-name">日程清单</div>
+        <div class="feat-val">左侧面板，支持<b>添加 / 删除 / 勾选完成</b>。支持<b>三级优先级</b>：高（红色背景）/ 普通（绿色）/ 低（灰色）。勾选后自动添加删除线。</div>
+        <span class="badge core">CORE</span>
+      </div>
+      <!-- 03 闹钟提醒 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 03</span>
+        <div class="feat-icon">⏰</div>
+        <div class="feat-name">闹钟提醒</div>
+        <div class="feat-val">右侧面板，按时间排序。支持 <code>h:mm</code> 和 <code>hh:mm</code> 两种格式输入。到时弹窗 + 循环报警音，时间不能早于当前时刻。</div>
+        <span class="badge core">CORE</span>
+      </div>
+      <!-- 04 重复闹钟 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 04</span>
+        <div class="feat-icon">🔁</div>
+        <div class="feat-name">重复提醒</div>
+        <div class="feat-val">闹钟支持<b>四种重复模式</b>：<br>· 单次（触发后删除）<br>· 每天（加一天重排）<br>· 每周（加七天重排）<br>· 工作日（跳过周末）</div>
+        <span class="badge new">NEW</span>
+      </div>
+      <!-- 05 Snooze -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 05</span>
+        <div class="feat-icon">💤</div>
+        <div class="feat-name">Snooze 稍后提醒</div>
+        <div class="feat-val">提醒弹窗内含<b>时间微调器</b>（1–60 分钟）和「Snooze」按钮。点击后自动在指定分钟后重新触发，适合暂时忙碌的场景。</div>
+        <span class="badge new">NEW</span>
+      </div>
+      <!-- 06 数据持久化 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 06</span>
+        <div class="feat-icon">💾</div>
+        <div class="feat-name">数据持久化</div>
+        <div class="feat-val">关闭时<b>自动保存</b>全部日程和闹钟（含重复模式）到 JSON 文件；启动时<b>自动恢复</b>，过期的单次闹钟自动跳过。</div>
+        <span class="badge new">NEW</span>
+      </div>
+      <!-- 07 系统托盘 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 07</span>
+        <div class="feat-icon">🔔</div>
+        <div class="feat-name">系统托盘</div>
+        <div class="feat-val">最小化到系统托盘常驻。<b>右键菜单</b>含三项：<br>· Open RemindMe（还原窗口）<br>· Mute / Unmute（静音切换）<br>· Quit（退出）</div>
+        <span class="badge util">SYSTEM</span>
+      </div>
+      <!-- 08 窗口置顶与透明度 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 08</span>
+        <div class="feat-icon">📌</div>
+        <div class="feat-name">置顶 & 透明度</div>
+        <div class="feat-val">左侧设置抽屉（点击边缘展开）内含：<br>· <b>Always On Top</b> 开关——窗口始终在最前<br>· <b>Opacity 滑块</b>——窗口透明度 20%–100%</div>
+        <span class="badge new">NEW</span>
+      </div>
+      <!-- 09 全屏自适应 -->
+      <div class="feat-cell">
+        <span class="feat-tag">功能 09</span>
+        <div class="feat-icon">🖥️</div>
+        <div class="feat-name">全屏自适应</div>
+        <div class="feat-val">启动即最大化，窗口可自由缩放。三列布局（日程 / 时钟 / 闹钟）随窗口尺寸动态重排，按钮栏贴底，设置抽屉始终竖向居中。</div>
+        <span class="badge new">NEW</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ §03 界面布局 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">界面布局</h2>
+      <span class="section-tag">三列布局 · 全屏</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+      <div>
+        <div class="box accent-box" style="margin-bottom:16px;">
+          <span class="b-tag">主窗口结构</span>
+          <div class="b-body">窗口分为<b>三个纵向列区</b>，随窗口尺寸等比缩放：<br><br>
+          <b>左列（25% 宽）</b>：日程清单标题 + CheckBox 列表 + 添加/删除按钮<br><br>
+          <b>中列（50% 宽）</b>：日期标签 + 时间标签（液晶字体）+ 熊猫动态图<br><br>
+          <b>右列（25% 宽）</b>：闹钟表格（时间 | 内容双列）+ 添加/删除按钮
+          </div>
+        </div>
+        <div class="box dense">
+          <span class="b-tag">辅助区域</span>
+          <div class="b-body">
+            <b>左侧抽屉（隐藏式）</b>：点击边缘红色竖条展开，含声音开关、置顶、透明度三项设置，500ms 动画滑入。<br><br>
+            <b>底部按钮栏</b>：贴窗口底部，两侧分别放日程操作（添加/删除）和闹钟操作（添加/删除），中间留空展示时钟。
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="box signal-box">
+          <span class="b-tag">提醒弹窗 · MyDialog</span>
+          <div class="b-title" style="font-size:16px;">闹钟到时弹窗</div>
+          <div class="b-body">
+            弹窗宽 450px，含图标 + 提醒内容 + 三个交互区：<br><br>
+            · <b>Close</b>：关闭弹窗并停止报警音<br>
+            · <b>分钟数微调器</b>（1–60 min）+ <b>Snooze</b>：延迟重新提醒<br>
+            · <b>Enter / Esc</b>：键盘快速关闭<br><br>
+            弹窗出现时主窗口自动从托盘还原到前台。
+          </div>
+        </div>
+        <div class="box warn-box">
+          <span class="b-tag">添加日程对话框 · DlgTasks</span>
+          <div class="b-body">
+            输入框 + 优先级下拉菜单（High Priority / Normal / Low Priority）+ 确定/取消。打开时焦点自动落在输入框。
+          </div>
+        </div>
+        <div class="box warn-box">
+          <span class="b-tag">添加闹钟对话框 · DlgClocks</span>
+          <div class="b-body">
+            时间输入框（支持 <code>9:37</code> 或 <code>09:37</code>）+ 内容输入框 + 确定/取消。校验不能早于当前时间，打开时焦点自动落在时间框。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ §04 快捷键 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">快捷键</h2>
+      <span class="section-tag">键盘操作全覆盖</span>
+    </div>
+
+    <table class="shortcut-table">
+      <thead>
+        <tr>
+          <th>快捷键</th>
+          <th>作用域</th>
+          <th>功能</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ctrl + Q</td>
+          <td>主窗口</td>
+          <td><b>添加日程</b>——打开 DlgTasks 对话框</td>
+        </tr>
+        <tr>
+          <td>Ctrl + W</td>
+          <td>主窗口</td>
+          <td><b>删除日程</b>——删除当前选中且已勾选的日程</td>
+        </tr>
+        <tr>
+          <td>Ctrl + E</td>
+          <td>主窗口</td>
+          <td><b>添加闹钟</b>——打开 DlgClocks 对话框</td>
+        </tr>
+        <tr>
+          <td>Ctrl + R</td>
+          <td>主窗口</td>
+          <td><b>删除闹钟</b>——删除当前选中行的闹钟</td>
+        </tr>
+        <tr>
+          <td>Delete</td>
+          <td>日程列表 / 闹钟表格</td>
+          <td><b>键盘删除</b>——焦点在列表时删除日程，焦点在表格时删除闹钟</td>
+        </tr>
+        <tr>
+          <td>Enter / Esc</td>
+          <td>提醒弹窗</td>
+          <td><b>关闭弹窗</b>——停止报警音并关闭提醒窗口</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ §05 设置面板 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">设置面板</h2>
+      <span class="section-tag">左侧抽屉 · 点击展开</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;">
+      <div class="box signal-box">
+        <span class="b-tag">设置 01 · 提示音</span>
+        <div class="b-title">声音开关</div>
+        <div class="b-body">图标按钮切换提示音开 / 关。同步与托盘菜单的 Mute/Unmute 联动，状态一致。默认<b>开启</b>，音量 25%，WAV 循环播放。</div>
+      </div>
+      <div class="box signal-box">
+        <span class="b-tag">设置 02 · 置顶</span>
+        <div class="b-title">Always On Top</div>
+        <div class="b-body">点击切换窗口是否始终在最前方显示。适合将 RemindMe 作为常驻桌面工具使用，不被其他窗口遮挡。</div>
+      </div>
+      <div class="box signal-box">
+        <span class="b-tag">设置 03 · 透明度</span>
+        <div class="b-title">Opacity 滑块</div>
+        <div class="b-body">拖动滑块调节窗口透明度，范围 20%–100%，实时生效。适合多窗口叠加工作场景，避免完全遮挡其他内容。</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="box dense">
+        <span class="b-tag">快捷操作 · 一键清空</span>
+        <div class="b-body">清空按钮（🗑）同时删除全部日程 + 停止所有闹钟计时器 + 清空闹钟表格，操作前有二次确认弹窗。</div>
+      </div>
+      <div class="box dense">
+        <span class="b-tag">面板动画</span>
+        <div class="b-body">点击窗口左侧红色竖条展开设置面板（500ms 滑入动画）；点击面板内收起按钮折叠（100ms 快速收回）。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ §06 数据持久化 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">数据持久化</h2>
+      <span class="section-tag">JSON · 自动读写</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div>
+        <div class="box accent-box" style="margin-bottom:16px;">
+          <span class="b-tag">存储位置</span>
+          <div class="b-body">数据文件路径：<br><code>%AppData%\RemindMe\remindme_data.json</code><br><br>由 Qt <code>QStandardPaths::AppDataLocation</code> 自动确定，无需手动配置。</div>
+        </div>
+        <div class="box dense">
+          <span class="b-tag">保存时机</span>
+          <div class="b-body">点击关闭按钮 → 确认退出 → <b>先保存数据再退出</b>。数据包含所有日程（文本 + 优先级颜色 + 勾选状态）和全部闹钟（时间 + 内容 + 重复模式）。</div>
+        </div>
+      </div>
+      <div>
+        <div class="box signal-box" style="margin-bottom:16px;">
+          <span class="b-tag">恢复逻辑</span>
+          <div class="b-title" style="font-size:16px;">启动时自动恢复</div>
+          <div class="b-body">
+            <b>日程</b>：按原顺序 + 优先级颜色恢复，勾选状态一并还原。<br><br>
+            <b>闹钟</b>：根据当前时间重新计算剩余毫秒，重新 <code>startTimer</code>：<br>
+            · 单次且已过期 → <b>自动跳过</b><br>
+            · 重复模式且已过期 → <b>推算下一次触发时间</b>后恢复
+          </div>
+        </div>
+        <div class="box dense">
+          <span class="b-tag">JSON 结构</span>
+          <div class="b-body"><code>{ "tasks": [...], "clocks": [...] }</code><br><br>每条 task 含 <code>text</code> / <code>checked</code> / <code>priority</code>（颜色值）；每条 clock 含 <code>time</code> / <code>content</code> / <code>repeat</code>。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ §07 技术栈 ============ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">技术栈 & 架构</h2>
+      <span class="section-tag">Qt5 · MSVC · x64</span>
+    </div>
+
+    <table class="arch-table">
+      <thead>
+        <tr>
+          <th>模块</th>
+          <th>职责</th>
+          <th>关键信号 / 接口</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mainwindow</td>
+          <td>主窗口，协调全部功能；闹钟数据存储于 <code>QVector&lt;ClockNode&gt;</code>；布局由 <code>repositionWidgets()</code> 在 <code>resizeEvent</code> 中动态计算</td>
+          <td><code>timerEvent</code> / <code>recMsg</code> / <code>recQStr</code> / <code>saveData</code> / <code>loadData</code></td>
+        </tr>
+        <tr>
+          <td>DlgTasks</td>
+          <td>添加日程对话框；用户输入文本和优先级后确认</td>
+          <td>emit <code>SendText(text, priority)</code></td>
+        </tr>
+        <tr>
+          <td>DlgClocks</td>
+          <td>添加闹钟对话框；校验时间格式和非过去时间约束</td>
+          <td>emit <code>sendMsg(time, content)</code></td>
+        </tr>
+        <tr>
+          <td>MyDialog</td>
+          <td>闹钟触发提醒弹窗；支持关闭和 Snooze 两种响应</td>
+          <td>emit <code>signalSnooze(minutes)</code> / <code>signalMyDialogBtnCloseClicked()</code></td>
+        </tr>
+        <tr>
+          <td>ClockNode</td>
+          <td>闹钟数据结构，存于 <code>QVector</code>，替代原手写链表</td>
+          <td>字段：<code>timerId</code> / <code>time</code> / <code>content</code> / <code>repeat</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="stripe" style="margin-top:28px;">
+      <span class="stripe-num">构建</span>
+      <span class="stripe-name">Build <em>· Qt 5.14.1 MSVC2017 x64</em></span>
+      <span class="stripe-meta">RELEASE CONFIG</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <div class="box dense">
+        <span class="b-tag">构建工具</span>
+        <div class="b-body">MSBuild v18 + Qt/MSBuild 3.4.1 + Visual Studio BuildTools 2022</div>
+      </div>
+      <div class="box dense">
+        <span class="b-tag">编码约定</span>
+        <div class="b-body">编译器标志 <code>/utf-8</code>（已写入 .vcxproj）；<b>.cpp/.h 文件中不写中文字符串</b>，统一用英文或 <code>QString::fromUtf8()</code></div>
+      </div>
+      <div class="box dense">
+        <span class="b-tag">输出产物</span>
+        <div class="b-body"><code>x64/Release/RemindMe.exe</code>，单实例保护（QSharedMemory），有效期校验（180天）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONCLUSION ============ -->
+  <div class="conclusion">
+    <div class="con-label">§ 08 · 一句话总结</div>
+    <p>RemindMe 是一款<em>全屏自适应、数据持久化、支持重复闹钟与 Snooze</em> 的 Windows 桌面提醒工具，以<b>三列布局</b>同屏呈现日程清单、实时时钟与闹钟管理，<em>系统托盘常驻、置顶透明度可调</em>，适合需要<b>轻量、始终可见的日程提醒场景</b>。</p>
+  </div>
+
+  <footer>
+    <span>RemindMe · 功能介绍文档 · feature/ai-upgrade</span>
+    <span>Qt5 · C++ · Windows Desktop · 2026-06-12</span>
+  </footer>
+
+</div>
+</body>
+</html>

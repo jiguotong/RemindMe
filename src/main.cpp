@@ -5,70 +5,45 @@
 #include <QMessageBox>
 #include <QDateTime>
 #define _CRTDBG_MAP_ALLOC
-#define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #include <stdlib.h>
-#include <crtdbg.h>
 
 #include "Mainwindow.h"
+
 int main(int argc, char *argv[])
 {
-    // 检测内存泄漏
-    //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-    // 进入程序
     QApplication a(argc, argv);
+    a.setApplicationName("RemindMe");
     qDebug() << "QApplication start!";
 
-    ///*时间有效期为3天，三天后不可用！*/
-    //QDateTime baseTime = QDateTime::fromString("2023-10-17 00:00:00", "yyyy-MM-dd hh:mm:ss");       // 规定一个初始化基准时间
-    //QDateTime currentTime = QDateTime::currentDateTime();                                           //获取系统当前的时间
-    //int startTime = baseTime.toTime_t();        //将当前时间转为时间戳
-    //int endTime = currentTime.toTime_t();       //将当前时间转为时间戳
-    //if (endTime - startTime > 86400*15) {
-    //    QMessageBox::warning(NULL, "Error", "Time permission exceeded! Please contact the developer!");
-    //    return -1;
-    //}
+    // Time-limited build: valid for 180 days from base date
+    QDateTime baseTime    = QDateTime::fromString("2026-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss");
+    QDateTime currentTime = QDateTime::currentDateTime();
+    qint64 startTime = baseTime.toSecsSinceEpoch();
+    qint64 endTime   = currentTime.toSecsSinceEpoch();
+    if (endTime - startTime > 86400LL * 180) {
+        QMessageBox::warning(nullptr, "Error", "Time permission exceeded! Please contact the developer!");
+        return -1;
+    }
 
-
-    // 设置一个互斥量
+    // Single-instance guard via shared memory.
+    // Intentionally never deleted: shared memory must outlive the process
+    // to block a second instance from launching.
     QMutex mutex;
-    mutex.lock();// 开启临界区
-    // 在临界区内创建SingleApp的共享内存块
+    mutex.lock();
     static QSharedMemory* shareMem = new QSharedMemory("SingleApp");
     if (!shareMem->create(1)) {
-        mutex.unlock();// 关闭临界区
-        QMessageBox::information(0, "Tip", "RemindMe has been running!");
-        return -1;  // 创建失败，说明已有一个程序在运行，退出当前程序
+        mutex.unlock();
+        QMessageBox::information(nullptr, "Tip", "RemindMe is already running!");
+        return -1;
     }
-    mutex.unlock();// 关闭临界区
+    mutex.unlock();
 
     Mainwindow w;
-    w.show(); 
+    w.showMaximized();
 
-    return a.exec(); 
-
+    int ret = a.exec();
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
     _CrtDumpMemoryLeaks();
-}   
-
-
-// 参考资料
-//https://blog.csdn.net/lion_cxq/article/details/115101356
-//https://blog.csdn.net/CXYYL/article/details/129275039
-
-//https://blog.csdn.net/weixin_42692504/article/details/108065692 最小化到托盘
-
-// 系统托盘
-//trayIcon = new QSystemTrayIcon();
-//trayIcon->setIcon(QIcon(":/logo.ico"));
-//
-//QMenu* menu = new QMenu();
-//QAction* action = menu->addAction("退出");
-//connect(action, &QAction::triggered, this, &Widget::systemExit);
-//
-//trayIcon->setContextMenu(menu);
-//trayIcon->show();
-
-// 表格QTableView
-//https://blog.csdn.net/u010031316/article/details/116886567
+    return ret;
+}
